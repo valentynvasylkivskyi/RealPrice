@@ -1,0 +1,11 @@
+body {
+    margin: 0 auto;
+}
+
+
+
+.card-img-top {
+    width: 256px;
+    height: 10vw;
+    object-fit: contain;
+}

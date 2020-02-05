@@ -1,0 +1,20 @@
+{% extends 'myapp/base.html' %}
+{% block search_result %}
+
+<br>
+
+<div class="card-deck">
+    {% for product in search_result %}
+    <div class="card bg-light mb-3" style="min-width: 18rem; max-width: 18rem">
+        <div class="card-body">
+            <h5 class="card-title">{{ product.product_name }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted"> min: {{ product.min_price }} now: {{ product.now_price }} max: {{ product.max_price }}</h6>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            <a href="{% url 'product_detail' pk=product.pk %}" class="card-link">More</a>
+            <a href="{{ product.link }}" class="card-link">Link to shop</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

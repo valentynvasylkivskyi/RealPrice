@@ -1,0 +1,6 @@
+__pycache__
+realprice_env
+db.sqlite3
+/static
+.idea/
+TODO.txt

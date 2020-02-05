@@ -1,0 +1,103 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+    <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="static/myapp/myapp.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+          integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+      <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+    <title> Отслеживание реальной стоимости товаров в интернет-магазинах</title>
+    </head>
+
+    <body>
+        <!-- Grey with black text -->
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <a class="navbar-brand" href="{% url 'home' %}">RealPrice</a>
+            <ul class="navbar-nav justify-content-end">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'product_list' %}">My tracking</a>
+                </li>
+            </ul>
+
+        {% if user.is_authenticated %}
+        <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item">
+                <!-- Search form -->
+                <form class="form-inline md-form form-sm mt-0" action="{%url 'search_result' %}" method="get" >
+                    <input name="q" class="form-control" type="text" placeholder="Search..."
+                        aria-label="Search" aria-describedby="inputGroup-sizing-sm">
+                </form>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}"><span class="fas fa-sign-out-alt"></span> Logout</a>
+            </li>
+        </ul>
+        {% else %}
+        <ul class="nav navbar-nav ml-auto">
+            <li class="nav-item">
+                <!-- Search form -->
+                <form class="form-inline md-form form-sm mt-0" action="{%url 'search_result' %}" method="get" >
+                    <input name="q" class="form-control" type="text" placeholder="Search..."
+                        aria-label="Search" aria-describedby="inputGroup-sizing-sm">
+                </form>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'signup' %}"><span class="fas fa-user"></span> Sign Up</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}"><span class="fas fa-sign-in-alt"></span> Login</a>
+            </li>
+        </ul>
+        {% endif %}
+        </nav>
+        <br>
+
+        <!-- Search -->
+        {% block search_result %}
+        {% endblock %}
+
+
+        <!-- All list of products view-->
+        <div class="card-deck">
+            {% for product in products_base %}
+            <div class="card mb-3" style="min-width: 16rem; max-width: 16rem;">
+                <img class="card-img-top" src="{{ product.product_image }}">
+                <div class="card-body">
+                    <h6 class="card-title">{{ product.product_name }}</h6>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        <small><span>min: {{ product.min_price }}</span></small>
+                        <small><span>now: {{ product.now_price }}</span></small>
+                        <small><span>max: {{ product.max_price }}</span></small>
+                    </h6>
+                    <small><a href="{% url 'product_detail' pk=product.pk %}" class="card-link">More</a></small>
+                    <small><a href="{{ product.link }}" class="card-link">Link to shop</a></small>
+                </div>
+
+                <div class="card-footer">
+                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Navigation Bar Login -->
+        {% block main %}
+        {% endblock %}
+
+        <!-- Navigation Bar SignUp -->
+        {% block signup %}
+        {% endblock %}
+
+
+        <!-- Page Content -->
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>
