@@ -5,8 +5,8 @@
 
 <div class="card-deck">
     {% for product in products %}
-    <div class="card mb-3" style="min-width: 16rem; max-width: 16rem;">
-        <img class="card-img-top" src="{{ product.product_image }}">
+    <div class="card mb-3">
+        <img class="card-img-top" src="{{ product.product_image.url }}">
         <div class="card-body">
             <h6 class="card-title">{{ product.product_name }}</h6>
             <h6 class="card-subtitle mb-2 text-muted">

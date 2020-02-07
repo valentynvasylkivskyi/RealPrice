@@ -8,10 +8,10 @@ class Product(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
-    product_name = models.CharField(max_length=64, null=False, blank=True)
-    min_price = models.IntegerField(null=False)
-    now_price = models.IntegerField(null=False)
-    max_price = models.IntegerField(null=False)
+    product_name = models.CharField(max_length=256, null=False, blank=True)
+    min_price = models.IntegerField()
+    now_price = models.IntegerField()
+    max_price = models.IntegerField()
     link = models.CharField(max_length=1024, null=False, blank=True)
     product_image = models.ImageField(upload_to='images', default='../media/images/default_img.jpg')
 
