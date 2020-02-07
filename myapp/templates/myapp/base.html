@@ -76,7 +76,7 @@
         <!-- All list of products view-->
         <div class="card-deck">
             {% for product in products_base %}
-            <div class="card mb-3">
+            <div class="card mb-3" style="min-width: 13rem; max-width: 16rem">
                 <img class="card-img-top" src="{{ product.product_image.url }}">
                 <div class="card-body">
                     <h6 class="card-title">{{ product.product_name }}</h6>
