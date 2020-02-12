@@ -36,8 +36,8 @@ def search(request):
 
 def product_list(request):
     if request.user.is_authenticated:
-        auth_user = request.user
-        products = Product.objects.filter(user=auth_user)
+        auth_user = request.user.username
+        products = Product.objects.filter(users__username__contains=auth_user)
         return render(request, 'myapp/product_list.html', {'products': products})
     else:
         return HttpResponseRedirect(reverse('login'))
