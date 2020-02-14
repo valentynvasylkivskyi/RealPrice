@@ -30,7 +30,7 @@
                         <a class="nav-link" href="{% url 'product_list' %}">My tracking</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Add track</a>
+                        <a class="nav-link" href="{% url 'add_tracking' %}">Add track</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">More action</a>
@@ -88,16 +88,25 @@
                         <small><span>now: {{ product.now_price }}</span></small>
                         <small><span>max: {{ product.max_price }}</span></small>
                     </h6>
+                    <h6 class="card-subtitle mb-2">
+                        <small><span>{{ product.shop }}</span></small>
+                    </h6>
+
+
                     <small><a href="{% url 'product_detail' pk=product.pk %}" class="card-link">More</a></small>
                     <small><a href="{{ product.link }}" class="card-link">Link to shop</a></small>
                 </div>
 
                 <div class="card-footer">
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    <p class="card-text"><small class="text-muted">Updated: {{ product.last_update }}</small></p>
                 </div>
             </div>
             {% endfor %}
         </div>
+
+
+        {% block add_tracking %}
+        {% endblock %}
 
         <!-- Navigation Bar Login -->
         {% block main %}

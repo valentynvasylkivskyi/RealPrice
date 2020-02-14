@@ -52,6 +52,9 @@ def base(request):
     auth_user = request.user
     return render(request, 'myapp/base.html', {'user': auth_user, 'products_base': products_base})
 
+def add_tracking(request):
+    return  render(request, 'myapp/add_tracking.html')
+
 
 
 

@@ -13,6 +13,7 @@ urlpatterns = [
     path('', views.base, name='home'),
     path('signup/', views.signup, name='signup'),
     path('search/', views.search, name='search_result'),
+    path('add_tracking/', views.add_tracking, name='add_tracking'),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

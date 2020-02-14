@@ -5,8 +5,17 @@
 
 <div class="card-deck">
     {% for product in search_result %}
-    <div class="card mb-3" style="min-width: 14rem; max-width: 16rem">
-        <img class="card-img-top" src="{{ product.product_image.url }}">
+    <div class="card mb-3" style="
+                                 min-width: 14rem;
+                                 max-width: 16rem;
+                                 margin: 0 auto;
+                                 float: none;
+                                 margin-bottom: 10px;">
+        <img class="card-img-top" style="
+                                        width: 100%;
+                                        height: 20vh;
+                                        object-fit: contain;"
+                                        src="{{ product.product_image.url }}">
         <div class="card-body">
             <h6 class="card-title">{{ product.product_name }}</h6>
             <h6 class="card-subtitle mb-2 text-muted">
