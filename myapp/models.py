@@ -29,7 +29,7 @@ class Product(models.Model):
     product_image = models.ImageField(upload_to='images', default=DEFAULT_IMAGE_PATH)
 
     # Before import shop foreignkey add default shop to the shop table
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, default=DEFAULT_SHOP_ID)
+    #shop = models.ForeignKey(Shop, on_delete=models.CASCADE, default=DEFAULT_SHOP_ID)
 
 
     visibility_status = models.PositiveSmallIntegerField(choices=visibility, default=DEFAULT_VISIBILITY_STATUS)

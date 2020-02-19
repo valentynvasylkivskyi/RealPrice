@@ -22,10 +22,13 @@
                 <small><span>now: {{ product.now_price }}</span></small>
                 <small><span>max: {{ product.max_price }}</span></small>
             </h6>
+            <h6 class="card-subtitle mb-2">
+                <small><span>{{ product.shop }}</span></small>
+            </h6>
         </div>
 
         <div class="card-footer">
-            <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            <p class="card-text"><small class="text-muted">Updated: {{ product.last_update }}</small></p>
         </div>
     </div>
     {% endfor %}
