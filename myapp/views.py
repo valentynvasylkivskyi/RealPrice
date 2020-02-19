@@ -52,8 +52,22 @@ def base(request):
     auth_user = request.user
     return render(request, 'myapp/base.html', {'user': auth_user, 'products_base': products_base})
 
+def add_tracking_link(request):
+    if request.user.is_authenticated:
+        return  render(request, 'myapp/add_tracking.html')
+    else:
+        return HttpResponseRedirect(reverse('login'))
+
 def add_tracking(request):
-    return  render(request, 'myapp/add_tracking.html')
+    auth_user = request.user
+    link = request.GET.get('q')
+    p = Product(link=link)
+    p.save()
+    p.users.add(auth_user)
+    return HttpResponseRedirect(reverse('product_list'))
+
+
+
 
 
 
