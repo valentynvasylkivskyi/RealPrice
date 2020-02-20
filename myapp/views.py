@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Q
-from django.views.generic import ListView
+
 
 from .models import Product
 from .forms import SignUpForm
