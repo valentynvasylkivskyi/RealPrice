@@ -1,3 +1,7 @@
 Django~=3.0.3
 django-crispy-forms
 Pillow
+bs4
+user_agent
+requests
+wget
