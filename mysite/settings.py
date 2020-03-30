@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -39,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'myapp',
     'crispy_forms',
+    'django_celery_results',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -118,7 +118,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript)
@@ -128,3 +128,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # Media files (Images? Videos, Music)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+CELERY_BROKER_URL = 'amqp://admin:k6Nawras@localhost/admin_vhost'
+CELERY_RESULT_BACKEND = 'django-db'

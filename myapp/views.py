@@ -1,12 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, authenticate
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.db.models import Q
 
 
 from .models import Product
 from .forms import SignUpForm
+from .tasks import gen_prime
+
+from time import sleep
 
 
 def signup(request):
@@ -65,6 +68,14 @@ def add_tracking(request):
     p.save()
     p.users.add(auth_user)
     return HttpResponseRedirect(reverse('product_list'))
+
+def test(request):
+    primes = gen_prime.delay(100)
+    sleep(5)
+    if primes.ready():
+        return HttpResponse('<h1>{}</h1>'.format(primes.get()))
+    else:
+        return HttpResponse('<h1>{}</h1>'.format('BAD BAD BAD'))
 
 
 

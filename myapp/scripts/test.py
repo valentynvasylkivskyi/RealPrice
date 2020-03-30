@@ -1,4 +1,22 @@
-from datetime import datetime
-now = datetime.now()
+from myapp.tasks import gen_prime
+from time import sleep
 
-print(now.strftime("%Y-%m-%d %H:%M:%S"))
+primes = gen_prime.delay(100)
+sleep(10)
+
+if primes.ready():
+    print(primes.get())
+else:
+    print('BAD WORk')
+
+
+
+
+
+
+
+
+
+
+
+

@@ -5,3 +5,6 @@ bs4
 user_agent
 requests
 wget
+celery
+flower
+django-celery-results

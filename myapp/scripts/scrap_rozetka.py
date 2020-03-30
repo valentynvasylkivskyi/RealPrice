@@ -20,7 +20,7 @@ import wget
 dir = os.path.abspath(os.path.dirname(__file__))
 download_path = MEDIA_ROOT + '/images/'
 
-# get all URLs from DB where 'rozetka.com.ua' in URL
+# get all products from DB where 'rozetka.com.ua' in URL
 products = Product.objects.filter(link__contains='rozetka.com.ua')
 
 for product in products:
@@ -59,9 +59,10 @@ for product in products:
     product.shop = shop
 
     # TODO сделать проверку на наличие файла картинки в папке
-    filename = wget.download(product_image_link)
-    os.rename(filename, os.path.join(download_path, filename))
-    product.product_image = 'images/{}'.format(filename)
+    if product.operation_result == False:
+        filename = wget.download(product_image_link)
+        os.rename(filename, os.path.join(download_path, filename))
+        product.product_image = 'images/{}'.format(filename)
 
     product.operation_result = True
     product.save()
