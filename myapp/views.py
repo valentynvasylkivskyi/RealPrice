@@ -7,8 +7,8 @@ from django.db.models import Q
 
 from .models import Product
 from .forms import SignUpForm
+from .tasks import add_product_task
 
-from .tasks import add_tracking_task
 
 def signup(request):
     if request.method == 'POST':
@@ -60,9 +60,13 @@ def add_tracking_link(request):
         return HttpResponseRedirect(reverse('login'))
 
 def add_tracking(request):
-    uid = request.user.id
+    user = request.user
     link = request.GET.get('q')
-    add_tracking_task.delay(link, uid)
+    p = Product(link=link)
+    p.save()
+    p.users.add(user)
+
+    add_product_task.delay(p.id)
     return HttpResponseRedirect(reverse('product_list'))
 
 
