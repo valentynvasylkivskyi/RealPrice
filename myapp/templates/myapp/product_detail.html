@@ -1,0 +1,23 @@
+{% extends 'myapp/base.html' %}
+
+{% block content %}
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">MIN</th>
+            <th scope="col">NOW</th>
+            <th scope="col">MAX</th>
+            <th scope="col">LINK</th>
+        </tr>
+    </thead>
+    <tbody>
+         <tr>
+             <th scope="row">{{ product.product_name }}</th>
+             <th scope="row">{{ product.min_price }} $</th>
+             <th scope="row">{{ product.now_price }} $</th>
+             <th scope="row">{{ product.max_price }} $</th>
+             <th scope="row">{{ product.link }}</th>
+        </tr>
+    </tbody>
+
+{% endblock %}

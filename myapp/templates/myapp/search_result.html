@@ -1,0 +1,35 @@
+{% extends 'myapp/base.html' %}
+{% block search_result %}
+
+<br>
+
+<div class="row row-cols-1 row-cols-md-6 justify-content-center">
+    {% for product in search_result %}
+    <div class="card mb-4" style="
+                                 min-width: 11rem;
+                                 max-width: 11rem;">
+        <img class="card-img-top" style="
+                                        width: 100%;
+                                        height: 20vh;
+                                        object-fit: contain;"
+                                        src="{{ product.product_image.url }}">
+        <div class="card-body">
+            <a href="{{ product.link }}" style="color: #222222">
+                <h6 class="card-title">
+                    <small>{{ product.product_name }}</small>
+                </h6>
+            </a>
+            <h6 class="card-subtitle mb-2 text-muted">
+                <small><small><span>{{ product.min_price }}</span></small></small>
+                <b><span>{{ product.now_price }}</span></b>
+                <strike><small><span>{{ product.max_price }}</span></small></strike>
+            </h6>
+            <p class="card-text">
+                <small><small class="text-muted">{{ product.last_update }}</small></small>
+            </p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

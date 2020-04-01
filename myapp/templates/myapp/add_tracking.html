@@ -1,0 +1,14 @@
+{% extends 'myapp/base.html' %}
+{% block add_tracking %}
+
+
+<div class="input-group input-group-sm mb-3 justify-content-center">
+    <div id="add-tracking_input">
+        <form action="{% url 'add' %}" method="get">
+            <input name='q' type="text" placeholder="Add link to product and press Enter" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
