@@ -1,4 +1,5 @@
 from mysite.celery import app
+
 from .models import Product
 from django.contrib.auth.models import User
 
@@ -11,6 +12,7 @@ def add_tracking_task(link, uid):
     user = User.objects.get(id=uid)
     p.users.add(user)
     return "the new product adding for {} complete".format(user.username)
+
 
 
 

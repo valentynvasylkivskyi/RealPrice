@@ -7,10 +7,8 @@ from django.db.models import Q
 
 from .models import Product
 from .forms import SignUpForm
+
 from .tasks import add_tracking_task
-
-from time import sleep
-
 
 def signup(request):
     if request.method == 'POST':
@@ -66,6 +64,8 @@ def add_tracking(request):
     link = request.GET.get('q')
     add_tracking_task.delay(link, uid)
     return HttpResponseRedirect(reverse('product_list'))
+
+
 
 
 
