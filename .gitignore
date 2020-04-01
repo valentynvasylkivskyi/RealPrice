@@ -4,6 +4,6 @@ db.sqlite3
 .idea/
 TODO.txt
 /migrations
-/media
-/media/images
+media
+media/images
 
