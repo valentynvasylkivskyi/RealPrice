@@ -14,10 +14,10 @@
                     <small>{{ product.product_name }}</small>
                 </h6>
             </a>
-            <h6 class="card-subtitle mb-2 text-muted">
-                <small><small><span>{{ product.min_price }}</span></small></small>
-                <b><span>{{ product.now_price }}</span></b>
-                <strike><small><span>{{ product.max_price }}</span></small></strike>
+            <h6 class="card-subtitle mb-2">
+                <small><b><span style="color: #fd971f">{{ product.min_price }}</span></b></small>
+                <b><span style="color: #272822">{{ product.now_price }}</span></b>
+                <small><b><span style="color:#F92672">{{ product.max_price }}</span></b></small>
             </h6>
             <p class="card-text">
                 <small><small class="text-muted">{{ product.last_update }}</small></small>
