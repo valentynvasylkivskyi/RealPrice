@@ -137,10 +137,11 @@ CELERY_TIMEZONE = 'Europe/Kiev'
 CELERY_BEAT_SCHEDULE = {
         'scrap_rozetka_periodic': {
         'task': 'myapp.tasks.scrap_rozetka_periodic',
-        'schedule': crontab(minute=0, hour='*/3'),
+        'schedule': crontab(minute=0, hour='*/1'),
     },
         'scrap_citrus_periodic': {
         'task': 'myapp.tasks.scrap_citrus_periodic',
-        'schedule': crontab(minute=0, hour='*/3'),
+        'schedule': crontab(minute=0, hour='*/1'),
+
     },
 }

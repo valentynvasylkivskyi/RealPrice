@@ -1,25 +1,34 @@
 # Scrap URL from rozetka.com.ua shop #
 import os
 import django
-
+from time import sleep
+from random import randint
 from datetime import datetime
-from myapp.models import Product, Shop
+
+from myapp.models import Shop
 from mysite.settings import MEDIA_ROOT
 
 from bs4 import BeautifulSoup
 import requests
 import wget
+from user_agent import generate_user_agent
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 django.setup()
 dir = os.path.abspath(os.path.dirname(__file__))
 download_path = MEDIA_ROOT + '/images/'
 
+def random_sleep(start=1, end=3):
+    sleep(randint(start, end))
 
 def scrap_rozetka_script(products):
     for product in products:
         try:
-            data_source = requests.get(product.link)
+            random_sleep()
+            headers = {'User-Agent': generate_user_agent()}
+
+            data_source = requests.get(product.link, headers)
+
             soup = BeautifulSoup(data_source.text, "html.parser")
 
             # get product fields
@@ -50,7 +59,7 @@ def scrap_rozetka_script(products):
             shop = Shop.objects.get(shop_name='rozetka.com.ua')
             product.shop = shop
 
-            # TODO сделать проверку на наличие файла картинки в папке
+            # TODO check image path in image storage
             if product.operation_result == False:
                 filename = wget.download(product_image_link)
                 os.rename(filename, os.path.join(download_path, filename))
@@ -59,6 +68,8 @@ def scrap_rozetka_script(products):
             product.operation_result = True
             product.save()
         except:
+            product.operation_result = False
+            product.save()
             continue
 
 

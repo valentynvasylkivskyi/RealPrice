@@ -1,5 +1,4 @@
-# Scrap URL from citrus.ua shop #
-
+# SCRAP TEMPLATE #
 import os
 import django
 from time import sleep
@@ -8,9 +7,8 @@ from datetime import datetime
 
 from myapp.models import Shop
 from mysite.settings import MEDIA_ROOT
+from .scrapers import scrap_allo
 
-from bs4 import BeautifulSoup
-import requests
 import wget
 from user_agent import generate_user_agent
 
@@ -22,34 +20,20 @@ download_path = MEDIA_ROOT + '/images/'
 def random_sleep(start=1, end=3):
     sleep(randint(start, end))
 
-def scrap_citrus_script(products):
+def scrap_template(products):
     for product in products:
         try:
             random_sleep()
             headers = {'User-Agent': generate_user_agent()}
 
-            data_source = requests.get(product.link, headers)
+            if "allo.ua" in product.link:
+                data = scrap_allo(product.link, headers)
+                if product.operation_result == False:
+                    product.shop = Shop.objects.get(shop_name='allo.ua')
 
-            soup = BeautifulSoup(data_source.text, "html.parser")
-
-            # get product fields
-            product_name = soup.find("header", class_="product__header").find("h1").text
-            price = soup.find("div", class_="normal__prices").find_all("div")
-            for i in price:
-                if '<div class="price"' in str(i):
-                    price = i.find("span").text
-
-            # get image source
-            image_source = requests.get(product.link+"?tab=photo")
-            soup = BeautifulSoup(image_source.text, "html.parser")
-            product_image_link = soup.find("ul", class_="gallery").find("li").find("img").get('src')
-
-            product_price = ''
-            for i in price:
-                if str(i).isnumeric():
-                    product_price += i
-
-            product_price = int(product_price)
+            product_name = data['product_name']
+            product_price = data['product_price']
+            product_image_link = data['product_image_link']
 
             # update database fields
             product.now_price = product_price
@@ -65,16 +49,11 @@ def scrap_citrus_script(products):
             now = datetime.now()
             product.last_update = now.strftime("%Y-%m-%d %H:%M:%S")
 
-
-
             # TODO check image path in image storage
             if product.operation_result == False:
                 filename = wget.download(product_image_link)
                 os.rename(filename, os.path.join(download_path, filename))
                 product.product_image = 'images/{}'.format(filename)
-
-                shop = Shop.objects.get(shop_name='citrus.ua')
-                product.shop = shop
 
             product.operation_result = True
             product.save()
