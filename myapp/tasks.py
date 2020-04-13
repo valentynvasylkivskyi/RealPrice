@@ -1,36 +1,27 @@
 from mysite.celery import app
 
 from myapp.models import Product
-from .scripts.scrap_rozetka import scrap_rozetka_script
-from .scripts.scrap_citrus import scrap_citrus_script
-from .scripts.scrap_template import scrap_template
+from .scripts.scrap_template_first_add import scrap_template_first_add
+from .scripts.scrap_template_periodic import scrap_template_periodic
 
 
 @app.task()
 def add_product_task(product_id):
-    link = Product.objects.get(id=product_id).link
-    product = Product.objects.filter(id=product_id)
-
-    if "rozetka.com.ua" in link:
-        scrap_rozetka_script(product)
-    elif "citrus.ua" in link:
-        scrap_citrus_script(product)
-    elif "allo.ua" in link:
-        scrap_template(product)
+    scrap_template_first_add(product_id)
     return "One product add complete"
 
 @app.task()
 def scrap_rozetka_periodic():
-    # get all products from DB where 'rozetka.com.ua' in URL
-    products = Product.objects.filter(link__contains='rozetka.com.ua')
-    scrap_rozetka_script(products)
+    scrap_template_periodic('rozetka.com.ua')
     return "Periodic task scrap ROZETKA complete"
 
 @app.task()
 def scrap_citrus_periodic():
-    # get all products from DB where 'citrus.ua' in URL
-    products = Product.objects.filter(link__contains='citrus.ua')
-    scrap_citrus_script(products)
+    scrap_template_periodic('citrus.ua')
     return "Periodic task scrap CITRUS complete"
 
+@app.task()
+def scrap_allo_periodic():
+    scrap_template_periodic('allo.ua')
+    return "Periodic task scrap ALLO complete"
 
