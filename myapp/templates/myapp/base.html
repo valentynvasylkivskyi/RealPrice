@@ -1,17 +1,24 @@
 <!doctype html>
 {% load static %}
+{% load humanize %}
 <html lang="en">
     <head>
         <!-- Required meta tags -->
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <link rel="stylesheet" href="static/myapp/css/base.css">
+        <link rel="stylesheet" href="/static/myapp/css/base.css">
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
             integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
         <title> Отслеживание реальной стоимости товаров в интернет-магазинах</title>
 
@@ -19,11 +26,24 @@
             body {
                 margin: 0;
             }
-
             .row {
                 margin: 0;
             }
-
+            .card-img-top {
+                width: 100%;
+                height: 20vh;
+                object-fit: contain;
+            }
+            .card {
+                min-width: 11rem;
+                max-width: 11rem;
+            }
+            #link_color {
+                color: #222222;
+            }
+            #add-tracking_input {
+                width: 80%;
+            }
         </style>
     </head>
 
@@ -38,13 +58,13 @@
             <div class="collapse navbar-collapse" id="navbarToggler">
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'product_list' %}">My tracking</a>
+                        <a class="nav-link" href="{% url 'my_tracking' %}">Мои трекинги</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'add_tracking' %}">Add track</a>
+                        <a class="nav-link" href="{% url 'add_tracking' %}">Добавить трекинг</a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">More action</a>
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Больше</a>
                         <div class="dropdown-menu">
                             <a class="dropdown-item" href="#">О сайте</a>
                             <a class="dropdown-item" href="#">Форма обратной связи</a>
@@ -55,26 +75,37 @@
                             <a class="dropdown-item" href="#">Получать новые трекинги</a>
                         </div>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Все треки по магазину</a>
+                        <ul class="dropdown-menu">
+                            <input class="form-control" id="myInput" type="text" placeholder="Название магазина..">
+                            {% for shop in shops %}
+                            <li><a class="dropdown-item" href="/shops/{{shop.shop_name}}">{{ shop.shop_name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    {% block nav_my_tracking %}
+                    {% endblock %}
                 </ul>
 
                 <!-- Search form -->
                 <form class="form-inline my-2 my-lg-0" action="{%url 'search_result' %}" method="get" >
-                    <input name="q" class="form-control" type="text" placeholder="Search" aria-label="Search" aria-describedby="inputGroup-sizing-sm">
+                    <input name="q" class="form-control" type="text" placeholder="Поиск" aria-label="Search" aria-describedby="inputGroup-sizing-sm">
                 </form>
 
                 <!-- Logout/Login/SignUp -->
                 <ul class="navbar-nav justify-content-end">
                     {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}"><span class="fas fa-sign-out-alt"></span> Logout</a>
+                        <a class="nav-link" href="{% url 'logout' %}"><span class="fas fa-sign-out-alt"></span> Выход</a>
                     </li>
 
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'signup' %}"><span class="fas fa-user"></span> Sign Up</a>
+                        <a class="nav-link" href="{% url 'signup' %}"><span class="fas fa-user"></span> Регистрация</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}"><span class="fas fa-sign-in-alt"></span> Login</a>
+                        <a class="nav-link" href="{% url 'login' %}"><span class="fas fa-sign-in-alt"></span> Вход</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -91,9 +122,13 @@
         <div class="row row-cols-1 row-cols-md-6 justify-content-center">
             {% for product in products_base %}
             <div class="card mb-4 " style="min-width: 11rem; max-width: 11rem">
-                <img class="card-img-top" src="{{ product.product_image.url }}">
+                <a href="{{ product.link }}" title="{{ product.product_name }}">
+                    <img alt="Купить{{ product.product_name }}" title="{{ product.product_name }}"
+                         class="card-img-top" src="{{ product.product_image.url }}">
+                </a>
+
                 <div class="card-body">
-                    <a id="link_color" href="{{ product.link }}" style="color: #222222">
+                    <a id="link_color" title="{{ product.product_name }}" href="{{ product.link }}" style="color: #222222">
                         <h6 class="card-title">
                             <small>{{ product.product_name }}</small>
                         </h6>
@@ -104,7 +139,7 @@
                         <small><b><span style="color:#F92672">{{ product.max_price }}</span></b></small>
                     </h6>
                     <p class="card-text">
-                        <small><small class="text-muted">{{ product.last_update }}</small></small>
+                        <small><small class="text-muted">Обновлено: {{ product.last_update |naturaltime }}</small></small>
                     </p>
                 </div>
             </div>
@@ -128,10 +163,30 @@
         {% block content %}
         {% endblock %}
 
-        <!-- Optional JavaScript -->
-        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        {% block shops %}
+        {% endblock %}
+
+        {% block products_by_shop %}
+        {% endblock %}
+
+
+        <script>
+            $(document).ready(function(){
+                $("#myInput").on("keyup", function() {
+                    var value = $(this).val().toLowerCase();
+                    $(".dropdown-menu li").filter(function() {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+            });
+            $(document).ready(function(){
+                $("#myInput_my_tracking").on("keyup", function() {
+                    var value = $(this).val().toLowerCase();
+                    $(".dropdown-menu li").filter(function() {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+            });
+        </script>
     </body>
 </html>

@@ -8,7 +8,7 @@ from datetime import datetime
 
 from myapp.models import Product, Shop
 from mysite.settings import MEDIA_ROOT
-from .scrapers import scrap_allo, scrap_citrus, scrap_rozetka
+from .scrapers import scrap_allo, scrap_citrus, scrap_rozetka, scrap_comfy
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
 django.setup()
@@ -62,6 +62,15 @@ def scrap_template_periodic(shop):
             try:
                 random_sleep()
                 data = scrap_rozetka(product.link)
+                product_update_fields(product, data)
+            except:
+                product.operation_result = False
+                product.save()
+    elif shop == "comfy.ua":
+        for product in products:
+            try:
+                random_sleep()
+                data = scrap_comfy(product.link)
                 product_update_fields(product, data)
             except:
                 product.operation_result = False

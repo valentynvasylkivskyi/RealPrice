@@ -1,6 +1,5 @@
 from mysite.celery import app
 
-from myapp.models import Product
 from .scripts.scrap_template_first_add import scrap_template_first_add
 from .scripts.scrap_template_periodic import scrap_template_periodic
 
@@ -25,3 +24,7 @@ def scrap_allo_periodic():
     scrap_template_periodic('allo.ua')
     return "Periodic task scrap ALLO complete"
 
+@app.task()
+def scrap_comfy_periodic():
+    scrap_template_periodic('comfy.ua')
+    return "Periodic task scrap COMFY complete"

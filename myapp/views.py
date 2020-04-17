@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.db.models import Q
 
 
-from .models import Product
+from .models import Product, Shop
 from .forms import SignUpForm
 from .tasks import add_product_task
 
@@ -35,23 +35,21 @@ def search(request):
         )
     return render(request, 'myapp/search_result.html', {'search_result': search_result})
 
-def product_list(request):
+def my_tracking(request):
     if request.user.is_authenticated:
         auth_user = request.user.username
         products = Product.objects.filter(users__username__contains=auth_user)
-        return render(request, 'myapp/product_list.html', {'products': products})
+        shops = Shop.objects.all()
+        return render(request, 'myapp/my_tracking.html', {'products': products, 'shops': shops})
     else:
         return HttpResponseRedirect(reverse('login'))
 
-def product_detail(request, pk):
-    if request.user.is_authenticated:
-        product = get_object_or_404(Product, pk=pk)
-    return render(request, 'myapp/product_detail.html', {'product': product})
 
 def base(request):
     products_base = Product.objects.all()
+    shops = Shop.objects.all()
     auth_user = request.user
-    return render(request, 'myapp/base.html', {'user': auth_user, 'products_base': products_base})
+    return render(request, 'myapp/base.html', {'user': auth_user, 'products_base': products_base, 'shops': shops})
 
 def add_tracking_link(request):
     if request.user.is_authenticated:
@@ -67,7 +65,18 @@ def add_tracking(request):
     p.users.add(user)
 
     add_product_task.delay(p.id)
-    return HttpResponseRedirect(reverse('product_list'))
+    return HttpResponseRedirect(reverse('my_tracking'))
+
+def all_trackers_by_shops(request, shop_name):
+    products = Product.objects.filter(shop=Shop.objects.get(shop_name=shop_name).id)
+    shops = Shop.objects.all()
+    return render(request, 'myapp/shops.html', {'products': products, 'shops': shops})
+
+def my_trackers_by_shops(request, shop_name):
+    products = Product.objects.filter(shop=Shop.objects.get(shop_name=shop_name).id, users__username__contains=request.user.username)
+    shops = Shop.objects.all()
+    return render(request, 'myapp/products_by_shop.html', {'products': products, 'shops': shops})
+
 
 
 

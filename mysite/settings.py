@@ -40,10 +40,11 @@ INSTALLED_APPS = [
     'myapp',
     'crispy_forms',
     'django_celery_results',
+    'django.contrib.humanize'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
-LOGIN_REDIRECT_URL =  '/product_list'
+LOGIN_REDIRECT_URL =  '/my_tracking'
 LOGOUT_REDIRECT_URL = '/'
 
 
@@ -111,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'Europe/Kiev'
 
@@ -119,7 +120,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript)
@@ -142,11 +143,13 @@ CELERY_BEAT_SCHEDULE = {
         'scrap_citrus_periodic': {
         'task': 'myapp.tasks.scrap_citrus_periodic',
         'schedule': crontab(minute=0, hour='*/1'),
-
     },
         'scrap_allo_periodic': {
         'task': 'myapp.tasks.scrap_allo_periodic',
         'schedule': crontab(minute=0, hour='*/1'),
-
+    },
+        'scrap_comfy_periodic': {
+        'task': 'myapp.tasks.scrap_comfy_periodic',
+        'schedule': crontab(minute=0, hour='*/1'),
     },
 }

@@ -1,15 +1,16 @@
 {% extends 'myapp/base.html' %}
-{% block content %}
-
-<br>
-
+{% load humanize %}
+{% block shops %}
 <div class="row row-cols-1 row-cols-md-6 justify-content-center">
     {% for product in products %}
-    <div class="card mb-4 " style="min-width: 11rem;
-                                   max-width: 11rem">
-        <img class="card-img-top" src="{{ product.product_image.url }}">
+    <div class="card mb-4 " style="min-width: 11rem; max-width: 11rem">
+        <a href="{{ product.link }}" title="{{ product.product_name }}">
+            <img alt="Купить{{ product.product_name }}" title="{{ product.product_name }}"
+                 class="card-img-top" src="{{ product.product_image.url }}">
+        </a>
+
         <div class="card-body">
-            <a href="{{ product.link }}" style="color: #222222">
+            <a id="link_color" title="{{ product.product_name }}" href="{{ product.link }}" style="color: #222222">
                 <h6 class="card-title">
                     <small>{{ product.product_name }}</small>
                 </h6>
@@ -20,11 +21,11 @@
                 <small><b><span style="color:#F92672">{{ product.max_price }}</span></b></small>
             </h6>
             <p class="card-text">
-                <small><small class="text-muted">{{ product.last_update }}</small></small>
+                <small><small class="text-muted">Обновлено: {{ product.last_update |naturaltime }}</small></small>
             </p>
         </div>
     </div>
     {% endfor %}
 </div>
-
 {% endblock %}
+

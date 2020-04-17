@@ -2,10 +2,13 @@
 import os
 import django
 from datetime import datetime
+import uuid
+import requests
+from user_agent import generate_user_agent
 
 from myapp.models import Shop, Product
 from mysite.settings import MEDIA_ROOT
-from .scrapers import scrap_allo, scrap_citrus, scrap_rozetka
+from .scrapers import scrap_allo, scrap_citrus, scrap_rozetka, scrap_comfy
 
 import wget
 
@@ -29,6 +32,10 @@ def scrap_template_first_add(product_id):
             data = scrap_citrus(product.link)
             if product.operation_result == False:
                 product.shop = Shop.objects.get(shop_name='citrus.ua')
+        elif "comfy.ua" in product.link:
+            data = scrap_comfy(product.link)
+            if product.operation_result == False:
+                product.shop = Shop.objects.get(shop_name='comfy.ua')
 
         # update database fields
         product.now_price = data['product_price']
@@ -40,10 +47,17 @@ def scrap_template_first_add(product_id):
         now = datetime.now()
         product.last_update = now.strftime("%Y-%m-%d %H:%M:%S")
 
-        # download image and add to image path
-        filename = wget.download(data['product_image_link'])
-        os.rename(filename, os.path.join(download_path, filename))
-        product.product_image = 'images/{}'.format(filename)
+        # download image and add to image path with WGET or requests
+        random_name = uuid.uuid1()
+        try:
+            image = wget.download(data['product_image_link'])
+            os.rename(image, os.path.join(download_path, "{}.jpg".format(random_name)))
+            product.product_image = 'images/{}.jpg'.format(random_name)
+        except:
+            r = requests.get(data['product_image_link'], headers={'User-Agent': generate_user_agent()})
+            with open(os.path.join(download_path, "{}.jpg".format(random_name)), 'wb') as f:
+                f.write(r.content)
+            product.product_image = 'images/{}.jpg'.format(random_name)
 
         product.operation_result = True
         product.save()

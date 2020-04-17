@@ -1,8 +1,8 @@
 {% extends 'myapp/base.html' %}
 {% load humanize %}
-{% block search_result %}
+{% block content %}
 <div class="row row-cols-1 row-cols-md-6 justify-content-center">
-    {% for product in search_result %}
+    {% for product in products %}
     <div class="card mb-4 " style="min-width: 11rem; max-width: 11rem">
         <a href="{{ product.link }}" title="{{ product.product_name }}">
             <img alt="Купить{{ product.product_name }}" title="{{ product.product_name }}"
@@ -27,5 +27,18 @@
     </div>
     {% endfor %}
 </div>
-
 {% endblock %}
+
+{% block nav_my_tracking %}
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Мои треки по магазинам</a>
+    <ul class="dropdown-menu">
+        <input class="form-control" id="myInput_my_tracking" type="text" placeholder="Название магазина..">
+        {% for shop in shops %}
+        <li><a class="dropdown-item" href="/shops/{{shop.shop_name}}">{{ shop.shop_name }}</a></li>
+        {% endfor %}
+
+    </ul>
+</li>
+{% endblock %}
+
