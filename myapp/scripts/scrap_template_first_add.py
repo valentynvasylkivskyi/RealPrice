@@ -1,12 +1,12 @@
 # SCRAP FIRST ADD TEMPLATE #
 import os
 import django
-from datetime import datetime
+from django.utils import timezone
 import uuid
 import requests
 from user_agent import generate_user_agent
 
-from myapp.models import Shop, Product
+from myapp.models import Shop, Product, Price
 from mysite.settings import MEDIA_ROOT
 from .scrapers import scrap_allo, scrap_citrus, scrap_rozetka, scrap_comfy
 
@@ -38,14 +38,11 @@ def scrap_template_first_add(product_id):
                 product.shop = Shop.objects.get(shop_name='comfy.ua')
 
         # update database fields
-        product.now_price = data['product_price']
-        product.min_price = data['product_price']
-        product.max_price = data['product_price']
+        product.price_set.create(price=data['product_price'])
         product.product_name = data['product_name']
 
         # update field Last update
-        now = datetime.now()
-        product.last_update = now.strftime("%Y-%m-%d %H:%M:%S")
+        product.last_update = timezone.now()
 
         # download image and add to image path with WGET or requests
         random_name = uuid.uuid1()

@@ -1,7 +1,12 @@
 {% extends 'myapp/base.html' %}
-{% block add_tracking %}
 
+{% block title %}
+<title>
+    Добавить трекинг
+</title>
+{% endblock%}
 
+{% block content %}
 <div class="input-group input-group-sm mb-3 justify-content-center">
     <div id="add-tracking_input">
         <form action="{% url 'add' %}" method="get">
@@ -9,6 +14,5 @@
         </form>
     </div>
 </div>
-
 {% endblock %}
 

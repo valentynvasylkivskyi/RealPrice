@@ -1,26 +1,30 @@
 body {
     margin: 0;
 }
-
 .row {
     margin: 0;
 }
-
 .card-img-top {
     width: 100%;
     height: 20vh;
     object-fit: contain;
 }
-
 .card {
     min-width: 11rem;
     max-width: 11rem;
 }
-
 #link_color {
     color: #222222;
 }
-
 #add-tracking_input {
     width: 80%;
+}
+#product_min_price {
+    color: #fd971f;
+}
+#product_now_price {
+    color: #272822;
+}
+#product_max_price {
+    color: #F92672;
 }

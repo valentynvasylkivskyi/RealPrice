@@ -2,11 +2,12 @@
 # SCRAP PERIODIC TEMPLATE #
 import os
 import django
+from django.utils import timezone
 from time import sleep
 from random import randint
 from datetime import datetime
 
-from myapp.models import Product, Shop
+from myapp.models import Product, Shop, Price
 from mysite.settings import MEDIA_ROOT
 from .scrapers import scrap_allo, scrap_citrus, scrap_rozetka, scrap_comfy
 
@@ -19,18 +20,12 @@ def random_sleep(start=1, end=3):
     sleep(randint(start, end))
 
 def product_update_fields(product, data):
-    product_price = data['product_price']
-
-    # update database fields
-    product.now_price = product_price
-    if product.min_price > product_price:
-        product.min_price = product_price
-    if product.max_price < product_price:
-        product.max_price = product_price
+    # add price
+    if product.last_price() != data['product_price']:
+        product.price_set.create(price=data['product_price'])
 
     # update field Last update
-    now = datetime.now()
-    product.last_update = now.strftime("%Y-%m-%d %H:%M:%S")
+    product.last_update = timezone.now()
 
     product.operation_result = True
     product.save()

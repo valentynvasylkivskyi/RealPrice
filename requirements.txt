@@ -8,3 +8,4 @@ wget
 celery
 flower
 django-celery-results
+psycopg2=2.8.5
