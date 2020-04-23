@@ -12,7 +12,7 @@ from .tasks import add_product_task
 class ProductsListView(ListView):
     model = Product
     template_name = 'myapp/base.html'
-    paginate_by = 16
+    paginate_by = 12
     context_object_name = "products"
     queryset = Product.objects.filter(operation_result=True)
 

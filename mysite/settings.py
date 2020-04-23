@@ -27,9 +27,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','realprice.pythonanywhere.com']
 
-
-# Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,7 +43,6 @@ INSTALLED_APPS = [
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL =  '/my_tracking'
 LOGOUT_REDIRECT_URL = '/'
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -78,10 +74,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -115,45 +109,24 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
-
 LANGUAGE_CODE = 'ru'
-
 TIME_ZONE = 'Europe/Kiev'
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript)
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
-# Media files (Images? Videos, Music)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
 
 CELERY_BROKER_URL = 'amqp://localhost'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = 'Europe/Kiev'
 CELERY_BEAT_SCHEDULE = {
-        'scrap_rozetka_periodic': {
-        'task': 'myapp.tasks.scrap_rozetka_periodic',
-        'schedule': crontab(minute=0, hour='*/1'),
-    },
-        'scrap_citrus_periodic': {
-        'task': 'myapp.tasks.scrap_citrus_periodic',
-        'schedule': crontab(minute=0, hour='*/1'),
-    },
-        'scrap_allo_periodic': {
-        'task': 'myapp.tasks.scrap_allo_periodic',
-        'schedule': crontab(minute=0, hour='*/1'),
-    },
-        'scrap_comfy_periodic': {
-        'task': 'myapp.tasks.scrap_comfy_periodic',
-        'schedule': crontab(minute=0, hour='*/1'),
+        'all_scraper_periodic_task': {
+        'task': 'myapp.tasks.all_scraper_periodic_task',
+        'schedule': crontab(minute=0, hour='*/8')
     },
 }

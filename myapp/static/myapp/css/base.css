@@ -11,7 +11,7 @@ body {
 }
 .card {
     min-width: 11rem;
-    max-width: 11rem;
+    max-width: 14rem;
 }
 #link_color {
     color: #222222;
@@ -25,4 +25,14 @@ body {
 }
 #product_discount {
     color: #F92672;
+}
+
+.page-item a {
+    color: #272822;
+}
+
+#page-item_active a {
+    color: #272822;
+    background-color: #cfcfc2;
+    border: 1px solid #cfcfc2;
 }

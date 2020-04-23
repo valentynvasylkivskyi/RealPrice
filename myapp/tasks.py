@@ -1,30 +1,19 @@
 from mysite.celery import app
+from .models import Product
 
 from .scripts.scrap_template_first_add import scrap_template_first_add
-from .scripts.scrap_template_periodic import scrap_template_periodic
+from .scripts.all_scraper_periodic import all_scraper_periodic
 
 
 @app.task()
 def add_product_task(product_id):
     scrap_template_first_add(product_id)
-    return "One product add complete"
+    return "ADD COMPLETE"
 
 @app.task()
-def scrap_rozetka_periodic():
-    scrap_template_periodic('rozetka.com.ua')
-    return "Periodic task scrap ROZETKA complete"
+def all_scraper_periodic_task():
+    products = Product.objects.filter(operation_result=True, status=True)
+    all_scraper_periodic(products)
+    return "PERIODIC TASK COMPLETE"
 
-@app.task()
-def scrap_citrus_periodic():
-    scrap_template_periodic('citrus.ua')
-    return "Periodic task scrap CITRUS complete"
 
-@app.task()
-def scrap_allo_periodic():
-    scrap_template_periodic('allo.ua')
-    return "Periodic task scrap ALLO complete"
-
-@app.task()
-def scrap_comfy_periodic():
-    scrap_template_periodic('comfy.ua')
-    return "Periodic task scrap COMFY complete"

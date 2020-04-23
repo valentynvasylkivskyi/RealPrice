@@ -3,7 +3,7 @@ import requests
 from user_agent import generate_user_agent
 
 
-def scrap_allo(link):
+def allo(link):
     data_source = requests.get(link, headers={'User-Agent': generate_user_agent()})
     soup = BeautifulSoup(data_source.text, "html.parser")
     data = {}
@@ -17,7 +17,7 @@ def scrap_allo(link):
     data['product_image_link'] = soup.find("img", id="image").get("src")
     return data
 
-def scrap_rozetka(link):
+def rozetka(link):
     data_source = requests.get(link, headers={'User-Agent': generate_user_agent()})
     soup = BeautifulSoup(data_source.text, "html.parser")
     data = {}
@@ -32,7 +32,7 @@ def scrap_rozetka(link):
     data['product_price'] = int(product_price)
     return data
 
-def scrap_citrus(link):
+def citrus(link):
     data_source = requests.get(link, headers={'User-Agent': generate_user_agent()})
     soup = BeautifulSoup(data_source.text, "html.parser")
     data = {}
@@ -52,7 +52,7 @@ def scrap_citrus(link):
     data['product_price'] = int(product_price)
     return data
 
-def scrap_comfy(link):
+def comfy(link):
     data_source = requests.get(link, headers={'User-Agent': generate_user_agent()})
     soup = BeautifulSoup(data_source.text, "html.parser")
     data = {}

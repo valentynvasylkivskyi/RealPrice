@@ -19,12 +19,20 @@ body {
 #add-tracking_input {
     width: 80%;
 }
-#product_min_price {
-    color: #fd971f;
-}
-#product_now_price {
+
+#product_first_price {
     color: #272822;
 }
-#product_max_price {
+#product_discount {
     color: #F92672;
+}
+
+.page-item a {
+    color: #272822;
+}
+
+#page-item_active a {
+    color: #272822;
+    background-color: #cfcfc2;
+    border: 1px solid #cfcfc2;
 }
