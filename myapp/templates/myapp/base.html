@@ -1,157 +1,258 @@
-<!doctype html>
+<!DOCTYPE html>
 {% load static %}
 {% load humanize %}
+{% load mathfilters %}
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-        <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="/static/myapp/css/base.css">
-
-        {% block title %}
-        <title>
-            Отслеживание реальной стоимости товаров в интернет-магазинах
-        </title>
-        {% endblock %}
-        <style>
-            .page-item a {
-                color: #272822;
-            }
-            #page-item_active a {
-                color: #cfcfc2;
-                background-color: #272822;
-                border: 1px solid #272822;
-            }
-            .card {
-                border-radius: 0;
-                padding: 2px; /* Поле вокруг текста */
-            }
-            .card:hover {
-                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-            }
-            .card-title {
-                height: 20%;
-                white-space: nowrap; /* Запрещаем перенос строк */
-                overflow: hidden; /* Обрезаем все, что не помещается в область */
-                text-overflow: ellipsis; /* Добавляем многоточие */
-            }
-            .row {
-            }
-
-        </style>
-    </head>
-
-    <body>
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-            <a class="navbar-brand" href="{% url 'home' %}">RealPrice</a>
-            <button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarToggler" aria-controls="navbarToggler" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse" id="navbarToggler">
-                <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'my_tracking' %}">Мои трекинги</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'base_add_tracking' %}">Добавить трекинг</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">О сайте</a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#">О сайте</a>
-                            <a class="dropdown-item" href="#">Форма обратной связи</a>
-                            <a class="dropdown-item" href="#">Правила</a>
-                            <a class="dropdown-item" href="#">Политика конфиденциальности</a>
-                            <a class="dropdown-item" href="#">Частые вопросы</a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Получать новые трекинги</a>
-                        </div>
-                    </li>
-                </ul>
-                <!-- Search form -->
-                <form class="form-inline my-2 my-lg-0" action="{%url 'base_search_content' %}" method="get" >
-                    <input name="q" class="form-control" type="text" placeholder="Поиск" aria-label="Search" aria-describedby="inputGroup-sizing-sm">
-                </form>
-                <!-- Logout/Login/SignUp -->
-                <ul class="navbar-nav justify-content-end">
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}"><span class="fas fa-sign-out-alt"></span> Выход</a>
-                    </li>
-
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'signup' %}"><span class="fas fa-user"></span> Регистрация</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}"><span class="fas fa-sign-in-alt"></span> Вход</a>
-                    </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </nav>
-        <br>
-        {% block content %}
-        <div class="row row-cols-1 row-cols-md-6 justify-content-center">
-            {% for product in products %}
-            <div class="card mb-4 ">
-                <a href="{{ product.link }}" title="{{ product.product_name }}">
-                    <img alt="Купить{{ product.product_name }}" title="{{ product.product_name }}"
-                         class="card-img-top" src="{{ product.product_image.url }}">
-                </a>
-                <div class="card-body">
-                    <b><h5 class="card-title" style="color: #F92672">{{ product.discount }}%</h5></b>
-                    <a id="link_color" title="{{ product.product_name }}" href="{{ product.link }}" style="color: #222222">
-                        <h6 class="card-title">
-                            <small>{{ product.product_name }}</small>
-                        </h6>
-                    </a>
-                    <h6 class="card-subtitle mb-2">
-                        <div>
-                            <small><span>Начальная -</span></small>
-                            <b><span id="product_first_price" style="color: #272822">{{ product.first_price }}</span></b>
-                        </div>
-
-
-                    </h6>
-                    <p class="card-text">
-                        <small><small class="text-muted">{{ product.last_update |naturaltime }}</small></small>
-                    </p>
-                </div>
-            </div>
-            {% endfor %}
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="/static/myapp/css/base.css">
+    {% block head %}
+    {% endblock %}
+    {% block title %}
+    <title>Отслеживание стоимости товаров, проверка реальности акций черная пятница, ночная распродажа</title>
+    {% endblock %}
+  </head>
+  <body>
+    <div class="header">
+      <div class="topnav" id="myTopnav">
+        <a href="{% url 'home' %}" class="active">RealPrice</a>
+        <div class="nav-item">
+          <a href="{% url 'my_tracking' %}">
+            <div style="display: inline-block;">
+              <img class="nav-item-image" 
+                  src="/static/myapp/icons/my_tracking.png">
+            </div>  
+            <div class="nav-item-text">    
+              <span class="nav-item-text_first-line">Мои</span>
+              <br>
+              <span class="nav-item-text_second-line">трекинги</span>
+            </div>           
+          </a>
+        </div>  
+        <div class="nav-item">
+          <a href="{% url 'base_add_tracking' %}">
+            <div style="display: inline-block;">
+              <img class="nav-item-image" 
+                  src="/static/myapp/icons/add_track.png">
+            </div>  
+            <div class="nav-item-text">    
+              <span class="nav-item-text_first-line">Добавить</span>
+              <br>
+              <span class="nav-item-text_second-line">новый трекинг</span>
+            </div>           
+          </a>
         </div>
-        <br>
+        <div class="nav-item">
+          <a href="#news">
+            <div style="display: inline-block;">
+              <img class="nav-item-image" 
+                  src="/static/myapp/icons/inform.png">
+            </div>  
+            <div class="nav-item-text">    
+              <span class="nav-item-text_first-line">Новости и</span>
+              <br>
+              <span class="nav-item-text_second-line">информация</span>
+            </div>           
+          </a>
+        </div>
+        <div class="nav_search">
+          <form action="{%url 'base_search_content' %}" method="get">
+            <input name="q" class="nav_search_input" type="search" placeholder="Поиск">
+          </form>
+        </div>  
+        <div class="nav_sign">
+          {% if user.is_authenticated %}
+          <a href="{% url 'logout' %}">
+            <div style="display: inline-block;">
+              <img class="nav-item-image"
+                  src="/static/myapp/icons/logout.png">
+            </div>
+            <div class="nav-item-text">
+              <span class="nav-item-text_first-line">Выйти,</span>
+              <br>
+              <span class="nav-item-text_second-line">но вернуться еще!</span>
+            </div>
+          </a>
+          {% else %}
+          <a href="{% url 'login' %}">
+            <div style="display: inline-block;">
+              <img class="nav-item-image" 
+                  src="/static/myapp/icons/user.png">
+            </div>  
+            <div class="nav-item-text">    
+              <span class="nav-item-text_first-line">Приветствую,</span>
+              <br>
+              <span class="nav-item-text_second-line">войдите в аккаунт</span>
+            </div>  
+          </a>
+          {% endif %}
+        </div>
+        <div class="nav-item">
+          <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+            <img class="nav-item-image" 
+              src="/static/myapp/icons/navbar_toogler.png">
+          </a>
+        </div>    
+      </div>
+    </div>
+    {% block content %}
+    <div class="main-content">
+      <div class="main-content_block">
+        <h1>{% block main-content-title %}Все трекинги{% endblock %}</h1>
+        <div class="main-content_tool-bar">
+          <div class="row">
+            <div class="col">
+              <div class="tool-bar_ordering">
+                <div class="ordering_items">
+                  <select class="ordering_filter">
+                    <option value="discount_desc">максимальная скидка</option>
+                    <option value="new">новые</option>
+                    <option value="price_asc">по увеличению цены</option>
+                    <option value="price_desc">по уменьшению цены</option>
+                    <option value="tracking_user_count_desc">отслеживаемые</option>
+                  </select>
+                </div>
+              </div>
+              <div class="tool-bar_filter">Фильтр</div>
+            </div>
+          </div>
+        </div>  
+        <div class="cards">
+          {% for product in products %}
+          <div class="card-block">
+            <div class="product-card">
+              <div class="product-card_header">
+                <div class="product-card_code">
+                  <span>Код: {{ product.id }}</span>
+                </div>
+              </div>
+              <div class="product-card_body">
+                <div class="product-card_preview">
+                    <a href="#" title="test">
+                      <img class="product-card_image" alt="Купить {{ product.product_name }}" title="{{ product.product_name }}"
+                         src="{{ product.product_image.url }}">
+                    </a>
+                </div>
+                <div class="product-card_detail">
+                  <div class="product-card_name">
+                    <a href="#" class target="_self" title="{{ product.product_name }}">
+                      <span>{{product.product_name}}</span>
+                    </a>
+                  </div>
+                  <div class="product-card_discount">
+                    <span class="product-card_discount_program">
+                      {% with discount=product.prices_DESC.0.price|div:product.prices_ASC.0.price|mul:100|sub:100 %}
+                      {{discount|floatformat:0}}%
+                      {% endwith %}
+                    </span>
+                  </div>
+                  <div class="product-card_prices">
+                    <div class="prices_start-price">
+                      <span>
+                        {{product.prices_ASC.0.price|intcomma}}
+                      </span>
+                    </div>
+                    <div class="prices_price">
+                      <span>{{product.prices_DESC.0.price|intcomma}}</span>
+                    </div>
+                    <div class="currency">
+                      <span>грн.</span>
+                    </div>
+                  </div>
+                  <div class="product-card_update">
+                    <span>
+                      <img class="product-card_last_update_icon" 
+                         src="/static/myapp/icons/update.ico">
+                    </span>
+                    <span class="product-card_last-update-text">
+                      {{product.last_update |naturaltime}}
+                    </span>
+                  </div>
+                </div>    
+              </div>
+              <div class="product-card_footer">
+              <div class="product-card_actions">
+                <div class="product-card_to-shop">
+                    <a href="{{ product.link }}">
+                      <img class="product-card_action_icons" alt="Купить {{product.product_name}}"
+                         src="/static/myapp/icons/product_shop.ico">
+                    </a>
+                </div>
+                <div class="product-card_to-graphic">
+                    <a href="#">
+                      <img class="product-card_action_icons" alt="{{product.product_name}}"
+                         src="/static/myapp/icons/product_graphic.ico">
+                    </a>
+                </div>
+                <div class="product-card_track">
+                    <a href="#">
+                      <img class="product-card_action_icons" alt="{{product.product_name}}"
+                         src="/static/myapp/icons/product_track.ico">
+                    </a>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>   
+        <div class="pagination-container"></div>
+        <div class="main-content_info">
+          <div>
+            <h2>Купить товары в лучших интернет-магазинах с максимальной скидкой</h2>
+            <p>Сайт RealPrice - предназначен для трекинга реальной стоимости товаров в интернет-магазинах. Наша команда за честную реализацию товаров в интернет-магазинах, честные акции в преддверии новогодних праздников, праздников весны, черной пятницы (Black Friday) и так далее. Вы, наверное не раз замечали, что некоторые интернет-магазины перед грандиозными скидками немного поднимают стоимость товаров, и потом на период скидки делают весомые лозунги -30%, -50%, -70%. Наша команда тоже замечала и решила сделать доступный, бесплатный инструмент для отслеживания реальной стоимости товаров в любом интернет-магазине.</p>
+            <p>Покупатели, которые не первый год “выхватывают” реально стоящие товары и по реальным скидкам давно мониторят цену на определенный товар задолго до объявления акции на него. Так почему же не сделать себе жизнь проще? Не тратить часы серфинга по интернет страницам и закладкам в вашем браузере. Все товары, которые вы планируете купить, купить, напомню по хорошей цене, будут отслеживаться в одном месте без Вашего вмешательства.</p>
+            <p>Каждый пользователь абсолютно бесплатно может поставить на трекинг (отслеживание) неограниченное количество товаров из любого интернет-магазина. Для этого необходимо пройти регистрацию и ввести ссылку на товар в интернет-магазине в форму добавления нового трекинга. Наш робот обработает Ваш запрос в порядке очереди и если товар находится на продаже в интернет-магазине из нашего списка, Вы практически сразу начнете отслеживать стоимость товара. Как только стоимость товара измениться, наш робот отправит Вам сообщение по электронной почте (вспоминаем, зачем нужна была регистрация и подтверждение email). Если интернет-магазин пока еще не добавлен в список для автоматической обработки роботом, Вам нужно подождать некоторое время для отслеживания. Поверьте, оно совсем небольшое и нужно для второго робота по автоматизации работы с интернет-ресурсом. </p>
+            <p>Всем желаем хороших, качественных покупок по реальной стоимости товара.</p>
 
-        {% if is_paginated %}
-            <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}
-                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
-                {% else %}
-                    <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">Previous</a></li>
-                {% endif %}
-                {% for i in paginator.page_range %}
-                    {% if page_obj.number == i %}
-                        <li class="page-item active" id="page-item_active">
-                            <a class="page-link" href="?page={{ i }}">{{ i }}</a>
-                        </li>
-                    {% else %}
-                        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
-                    {% endif %}
-                {% endfor %}
-                {% if page_obj.has_next %}
-                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
-                {% else %}
-                    <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1">Next</a></li>
-                {% endif %}
-            </ul>
-        {% endif %}
-        {% endblock %}
+          </div>
+        </div> 
+      </div>
+      <div class="product-prices">
+          <h2>Цены на популярные товары</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Товары со скидкой</th>
+                <th>Цена
 
-    </body>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Apple iPhone 11 Pro Max 512Gb Space Gray (MWHN2)</td>
+                <td>44 999</td>
+              </tr>
+              <tr>
+                <td>Apple iPhone 11 Pro Max 512Gb Space Gray (MWHN2)</td>
+                <td>44 999</td>
+              </tr>
+              <tr>
+                <td>Apple iPhone 11 Pro Max 512Gb Space Gray (MWHN2)</td>
+                <td>44 999</td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+      <div class="faq"></div>
+    </div>
+    {% endblock %}
+    <div class="footer"></div>
+    <script>
+    function myFunction() {
+      var x = document.getElementById("myTopnav");
+      if (x.className === "topnav") {
+        x.className += " responsive";
+      } else {
+        x.className = "topnav";
+      }
+    }
+    </script>
+
+  </body>
 </html>
+
+

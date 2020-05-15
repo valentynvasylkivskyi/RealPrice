@@ -33,19 +33,9 @@ class Product(models.Model):
     status = models.BooleanField(default=True)
     last_update = models.DateTimeField(auto_now_add=True, null=True)
 
-    def first_price(self):
-        return self.price_set.first().price
-
-    def last_price(self):
-        return self.price_set.last().price
-
-    def discount(self):
-        percent_discount = (self.price_set.first().price - self.price_set.last().price)/(self.price_set.first().price / 100)
-        return int(percent_discount)
 
     def __str__(self):
         return self.product_name
-
 
 class Price(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
@@ -53,7 +43,7 @@ class Price(models.Model):
     date = models.DateTimeField(auto_now_add=True, null=True)
 
     class Meta:
-        ordering = ["date"]
+        default_related_name = 'prices'
 
     def __int__(self):
         return self.price

@@ -12,7 +12,7 @@ def add_product_task(product_id):
 
 @app.task()
 def all_scraper_periodic_task():
-    products = Product.objects.filter(operation_result=True, status=True)
+    products = Product.objects.filter(status=True)
     all_scraper_periodic(products)
     return "PERIODIC TASK COMPLETE"
 

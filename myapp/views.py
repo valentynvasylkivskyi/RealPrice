@@ -2,10 +2,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login, authenticate
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
-from django.db.models import Q
-from django.views.generic import ListView
+from django.db.models import Q, Prefetch
+from django.views.generic import ListView, View
+from braces.views import LoginRequiredMixin
 
-from .models import Product
+from .models import Product, Price
 from .forms import SignUpForm
 from .tasks import add_product_task
 
@@ -14,23 +15,42 @@ class ProductsListView(ListView):
     template_name = 'myapp/base.html'
     paginate_by = 12
     context_object_name = "products"
-    queryset = Product.objects.filter(operation_result=True)
+    queryset = Product.objects.prefetch_related(
+        Prefetch('prices', queryset=Price.objects.order_by('date'), to_attr='prices_ASC'),
+        Prefetch('prices', queryset=Price.objects.order_by('-date'), to_attr='prices_DESC'),
+    )
 
+class MyTrackingView(LoginRequiredMixin, ProductsListView):
+    login_url = 'login'
 
-def signup(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
+    def get_template_names(self):
+        template_name = 'myapp/base_my_tracking.html'
+        return template_name
+    def get_queryset(self):
+        queryset = super().get_queryset().filter(
+            users__username__contains=self.request.user.username,
+            operation_result=True,
+        )
+        return queryset
+
+class SignUpView(View):
+    def render(self, request):
+        return render(request, 'registration/signup.html', {'form': self.form})
+
+    def post(self, request):
+        self.form = SignUpForm(request.POST)
+        if self.form.is_valid():
+            self.form.save()
+            username = self.form.cleaned_data.get('username')
+            raw_password = self.form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
             return redirect('home')
-    else:
-        form = SignUpForm()
-    return render(request, 'registration/signup.html', {'form': form})
+        return self.render(request)
 
+    def get(self, request):
+        self.form = SignUpForm()
+        return self.render(request)
 
 def search(request):
     query = request.GET.get('q')
@@ -42,13 +62,6 @@ def search(request):
         )
     return render(request, 'myapp/base_search_content.html', {'products': products})
 
-def my_tracking(request):
-    if request.user.is_authenticated:
-        auth_user = request.user.username
-        products = Product.objects.filter(users__username__contains=auth_user, operation_result=True)
-        return render(request, 'myapp/base_my_tracking.html', {'products': products})
-    else:
-        return HttpResponseRedirect(reverse('login'))
 
 def add_tracking_link(request):
     if request.user.is_authenticated:
