@@ -45,7 +45,7 @@
           </a>
         </div>
         <div class="nav-item">
-          <a href="#news">
+          <a href="javascript:void(0);" onclick="openForm()">
             <div style="display: inline-block;">
               <img class="nav-item-image" 
                   src="/static/myapp/icons/inform.png">
@@ -105,17 +105,21 @@
           <div class="row">
             <div class="col">
               <div class="tool-bar_ordering">
-                <div class="ordering_items">
+                <div class="ordering_items" onclick="openForm()">
+                  <span>максимальная скидка</span>
+                  <!--
                   <select class="ordering_filter">
                     <option value="discount_desc">максимальная скидка</option>
+
                     <option value="new">новые</option>
                     <option value="price_asc">по увеличению цены</option>
                     <option value="price_desc">по уменьшению цены</option>
                     <option value="tracking_user_count_desc">отслеживаемые</option>
+                    -->
                   </select>
                 </div>
               </div>
-              <div class="tool-bar_filter">Фильтр</div>
+              <div class="tool-bar_filter" onclick="openForm()">Фильтр</div>
             </div>
           </div>
         </div>  
@@ -181,13 +185,13 @@
                     </a>
                 </div>
                 <div class="product-card_to-graphic">
-                    <a href="#">
+                    <a href="javascript:void(0);" onclick="openForm()">
                       <img class="product-card_action_icons" alt="{{product.product_name}}"
                          src="/static/myapp/icons/product_graphic.ico">
                     </a>
                 </div>
                 <div class="product-card_track">
-                    <a href="#">
+                    <a href="javascript:void(0);" onclick="openForm()">
                       <img class="product-card_action_icons" alt="{{product.product_name}}"
                          src="/static/myapp/icons/product_track.ico">
                     </a>
@@ -197,8 +201,30 @@
             </div>
           </div>
           {% endfor %}
-        </div>   
-        <div class="pagination-container"></div>
+        </div>
+        {% if is_paginated %}
+        <div class="pagination-container">
+            <ul>
+                {% if page_obj.has_previous %}
+                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                {% else %}
+                {% endif %}
+                {% for i in paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="active skip">
+                            <a class="active" href="?page={{ i }}">{{ i }}</a>
+                        </li>
+                    {% else %}
+                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                {% else %}
+                {% endif %}
+            </ul>
+        </div>
+        {% endif %}
         <div class="main-content_info">
           <div>
             <h2>Купить товары в лучших интернет-магазинах с максимальной скидкой</h2>
@@ -211,29 +237,27 @@
         </div> 
       </div>
       <div class="product-prices">
-          <h2>Цены на популярные товары</h2>
+          <h2>Популярные товары со скидкой</h2>
           <table>
             <thead>
               <tr>
                 <th>Товары со скидкой</th>
-                <th>Цена
-
-                </th>
+                <th>Цена</th>
+                <th>Скидка</th>
               </tr>
             </thead>
             <tbody>
+              {% for product in products %}
               <tr>
-                <td>Apple iPhone 11 Pro Max 512Gb Space Gray (MWHN2)</td>
-                <td>44 999</td>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.prices_DESC.0.price|intcomma }} грн.</td>
+                <td>
+                  {% with discount=product.prices_DESC.0.price|div:product.prices_ASC.0.price|mul:100|sub:100 %}
+                  {{discount|floatformat:0}}%
+                  {% endwith %}
+                </td>
               </tr>
-              <tr>
-                <td>Apple iPhone 11 Pro Max 512Gb Space Gray (MWHN2)</td>
-                <td>44 999</td>
-              </tr>
-              <tr>
-                <td>Apple iPhone 11 Pro Max 512Gb Space Gray (MWHN2)</td>
-                <td>44 999</td>
-              </tr>
+              {% endfor %}
             </tbody>
           </table>
       </div>
@@ -241,6 +265,18 @@
     </div>
     {% endblock %}
     <div class="footer"></div>
+
+    <div id="popup-1">
+      <div class="popup-content">
+        <h3>Приносим извинения!</h3>
+        <br>
+        <p>Данный функционал сайта находиться на реконструкции.</p>
+        <p>Мы работаем над тем, что бы сделать сайт более удобным и функциональным для Вас</p>
+        <br>
+        <button onclick="closeForm()">ОК</button>
+      </div>
+    </div>
+
     <script>
     function myFunction() {
       var x = document.getElementById("myTopnav");
@@ -251,7 +287,14 @@
       }
     }
     </script>
-
+    <script>
+      function openForm() {
+        document.getElementById("popup-1").style.display = "block";
+      }
+      function closeForm() {
+        document.getElementById("popup-1").style.display = "none";
+      }
+    </script>
   </body>
 </html>
 

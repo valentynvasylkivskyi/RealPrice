@@ -12,8 +12,9 @@ urlpatterns = [
     path('logout', auth_views.LogoutView.as_view(), name='logout'),
     path('signup/', views.SignUpView.as_view(), name='signup'),
     path('search', views.search, name='base_search_content'),
-    path('add_tracking', views.add_tracking_link, name='base_add_tracking'),
-    path('add', views.add_tracking, name='add'),
+    #path('add_tracking', views.add_tracking_link, name='base_add_tracking'),
+    #path('add', views.add_tracking, name='add'),
+    path('add_tracking', views.AddTrackingView.as_view(), name='base_add_tracking'),
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

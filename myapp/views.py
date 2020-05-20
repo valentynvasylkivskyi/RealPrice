@@ -9,11 +9,12 @@ from braces.views import LoginRequiredMixin
 from .models import Product, Price
 from .forms import SignUpForm
 from .tasks import add_product_task
+from .scripts.scrap_template_first_add import scrap_template_first_add
 
 class ProductsListView(ListView):
     model = Product
     template_name = 'myapp/base.html'
-    paginate_by = 12
+    paginate_by = 15
     context_object_name = "products"
     queryset = Product.objects.prefetch_related(
         Prefetch('prices', queryset=Price.objects.order_by('date'), to_attr='prices_ASC'),
@@ -32,6 +33,19 @@ class MyTrackingView(LoginRequiredMixin, ProductsListView):
             operation_result=True,
         )
         return queryset
+
+class AddTrackingView(LoginRequiredMixin, ProductsListView):
+    login_url = 'login'
+
+    def get_template_names(self):
+        template_name = 'myapp/base_add_tracking.html'
+        return template_name
+    def post(self, request):
+        new_product = Product(link=request.POST.get('q'))
+        new_product.save()
+        new_product.users.add(self.request.user)
+        scrap_template_first_add(new_product.id)
+        return HttpResponseRedirect(reverse('my_tracking'))
 
 class SignUpView(View):
     def render(self, request):
@@ -55,10 +69,7 @@ class SignUpView(View):
 def search(request):
     query = request.GET.get('q')
     products = Product.objects.filter(
-            Q(product_name__icontains=query) |
-            Q(min_price__icontains=query) |
-            Q(now_price__icontains=query) |
-            Q(max_price__icontains=query)
+            Q(product_name__icontains=query)
         )
     return render(request, 'myapp/base_search_content.html', {'products': products})
 

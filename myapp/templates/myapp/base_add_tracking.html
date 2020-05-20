@@ -7,9 +7,13 @@
 {% endblock%}
 
 {% block content %}
-    <form action="{% url 'add' %}" method="get">
-        <input name='q' type="text" placeholder="Введите ссылку на товар и нажмите Enter" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
-    </form>
+    <div class="add_tracking">
+        <form method="post">
+            {% csrf_token %}
+            <input name="q" class="add_tracking_input" type="url" placeholder="Введите ссылку на товар и нажмите Enter">
+        </form>
+    </div>
 
+    {{ block.super }}
 {% endblock %}
-
+{% block main-content-title %}Отслеживают другие пользователи{% endblock %}

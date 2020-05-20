@@ -14,9 +14,9 @@ h1 {
     font-family: 'Montserrat', sans-serif;
 }
 button {
-	border-radius: 20px;
-	border: 1px solid #FF4B2B;
-	background-color: #FF4B2B;
+	border-radius: 10px;
+	border: 1px solid #f92672;
+	background-color: #f92672;
 	color: #FFFFFF;
 	font-size: 12px;
 	font-weight: bold;
