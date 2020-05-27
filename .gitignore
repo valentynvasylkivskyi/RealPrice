@@ -1,9 +1,25 @@
-__pycache__
-realprice_env
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff:
+*.log
+local_settings.py
 db.sqlite3
+
+# Environments
+.env
+realprice_env/
+
 .idea/
 TODO.txt
-/migrations
-media
-media/images
-.env
+media/
+
+# celery beat schedule file
+celerybeat-schedule.*
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt

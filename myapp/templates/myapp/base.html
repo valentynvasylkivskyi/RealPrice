@@ -2,6 +2,8 @@
 {% load static %}
 {% load humanize %}
 {% load mathfilters %}
+
+
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -18,6 +20,19 @@
     <div class="header">
       <div class="topnav" id="myTopnav">
         <a href="{% url 'home' %}" class="active">RealPrice</a>
+        <div class="nav-item-hide">
+          <a class="home-hide" href="{% url 'home' %}">
+            <div style="display: inline-block;">
+              <img class="nav-item-image"
+                  src="/static/myapp/icons/home.png">
+            </div>
+            <div class="nav-item-text">
+              <span class="nav-item-text_first-line">На</span>
+              <br>
+              <span class="nav-item-text_second-line">главную</span>
+            </div>
+          </a>
+        </div>
         <div class="nav-item">
           <a href="{% url 'my_tracking' %}">
             <div style="display: inline-block;">
@@ -106,7 +121,7 @@
             <div class="col">
               <div class="tool-bar_ordering">
                 <div class="ordering_items" onclick="openForm()">
-                  <span>максимальная скидка</span>
+                  <div style="overflow: hidden">максимальная скидка</div>
                   <!--
                   <select class="ordering_filter">
                     <option value="discount_desc">максимальная скидка</option>
@@ -115,16 +130,18 @@
                     <option value="price_asc">по увеличению цены</option>
                     <option value="price_desc">по уменьшению цены</option>
                     <option value="tracking_user_count_desc">отслеживаемые</option>
-                    -->
+
                   </select>
+                  -->
                 </div>
               </div>
-              <div class="tool-bar_filter" onclick="openForm()">Фильтр</div>
+              <div class="tool-bar_filter" onclick="openForm_filter()">Фильтр</div>
             </div>
           </div>
         </div>  
         <div class="cards">
-          {% for product in products %}
+
+          {% for product in object_list %}
           <div class="card-block">
             <div class="product-card">
               <div class="product-card_header">
@@ -202,24 +219,27 @@
           </div>
           {% endfor %}
         </div>
+        {% load paginate_tag %}
         {% if is_paginated %}
         <div class="pagination-container">
             <ul>
                 {% if page_obj.has_previous %}
-                    <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                    <li><a href="?{% param_replace page=page_obj.previous_page_number %}">&laquo;</a></li>
                 {% else %}
                 {% endif %}
                 {% for i in paginator.page_range %}
+                    {% if i <= page_obj.number|add:2 and i >= page_obj.number|add:-1 %}
                     {% if page_obj.number == i %}
                         <li class="active skip">
-                            <a class="active" href="?page={{ i }}">{{ i }}</a>
+                            <a class="active" >{{ forloop.counter }}</a>
                         </li>
                     {% else %}
-                        <li><a href="?page={{ i }}">{{ i }}</a></li>
+                        <li><a href="?{% param_replace page=forloop.counter %}">{{ i }}</a></li>
+                    {% endif %}
                     {% endif %}
                 {% endfor %}
                 {% if page_obj.has_next %}
-                    <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                    <li><a href="?{% param_replace page=page_obj.next_page_number %}">&raquo;</a></li>
                 {% else %}
                 {% endif %}
             </ul>
@@ -227,7 +247,7 @@
         {% endif %}
         <div class="main-content_info">
           <div>
-            <h2>Купить товары в лучших интернет-магазинах с максимальной скидкой</h2>
+            <h2>Купить товары с максимальной скидкой</h2>
             <p>Сайт RealPrice - предназначен для трекинга реальной стоимости товаров в интернет-магазинах. Наша команда за честную реализацию товаров в интернет-магазинах, честные акции в преддверии новогодних праздников, праздников весны, черной пятницы (Black Friday) и так далее. Вы, наверное не раз замечали, что некоторые интернет-магазины перед грандиозными скидками немного поднимают стоимость товаров, и потом на период скидки делают весомые лозунги -30%, -50%, -70%. Наша команда тоже замечала и решила сделать доступный, бесплатный инструмент для отслеживания реальной стоимости товаров в любом интернет-магазине.</p>
             <p>Покупатели, которые не первый год “выхватывают” реально стоящие товары и по реальным скидкам давно мониторят цену на определенный товар задолго до объявления акции на него. Так почему же не сделать себе жизнь проще? Не тратить часы серфинга по интернет страницам и закладкам в вашем браузере. Все товары, которые вы планируете купить, купить, напомню по хорошей цене, будут отслеживаться в одном месте без Вашего вмешательства.</p>
             <p>Каждый пользователь абсолютно бесплатно может поставить на трекинг (отслеживание) неограниченное количество товаров из любого интернет-магазина. Для этого необходимо пройти регистрацию и ввести ссылку на товар в интернет-магазине в форму добавления нового трекинга. Наш робот обработает Ваш запрос в порядке очереди и если товар находится на продаже в интернет-магазине из нашего списка, Вы практически сразу начнете отслеживать стоимость товара. Как только стоимость товара измениться, наш робот отправит Вам сообщение по электронной почте (вспоминаем, зачем нужна была регистрация и подтверждение email). Если интернет-магазин пока еще не добавлен в список для автоматической обработки роботом, Вам нужно подождать некоторое время для отслеживания. Поверьте, оно совсем небольшое и нужно для второго робота по автоматизации работы с интернет-ресурсом. </p>
@@ -247,13 +267,13 @@
               </tr>
             </thead>
             <tbody>
-              {% for product in products %}
+              {% for product in object_list %}
               <tr>
                 <td>{{ product.product_name }}</td>
                 <td>{{ product.prices_DESC.0.price|intcomma }} грн.</td>
                 <td>
-                  {% with discount=product.prices_DESC.0.price|div:product.prices_ASC.0.price|mul:100|sub:100 %}
-                  {{discount|floatformat:0}}%
+                  {% with discount_table=product.prices_DESC.0.price|div:product.prices_ASC.0.price|mul:100|sub:100 %}
+                  {{discount_table|floatformat:0}}%
                   {% endwith %}
                 </td>
               </tr>
@@ -273,10 +293,9 @@
         <p>Данный функционал сайта находиться на реконструкции.</p>
         <p>Мы работаем над тем, что бы сделать сайт более удобным и функциональным для Вас</p>
         <br>
-        <button onclick="closeForm()">ОК</button>
+        <button onclick="closeForm()">OK</button>
       </div>
     </div>
-
     <script>
     function myFunction() {
       var x = document.getElementById("myTopnav");
@@ -293,6 +312,69 @@
       }
       function closeForm() {
         document.getElementById("popup-1").style.display = "none";
+      }
+    </script>
+    <div id="popup-filter">
+      <div class="popup-filter-content">
+        <div class="filter-header">
+          <div>
+            <div class="filter-header-btn" onclick="closeForm_filter()">&larr; Назад</div>
+            <div class="title">Фильтр</div>
+          </div>
+        </div>
+        <div class="filter-body">
+          <div class="filter-base">
+            <form method="get">
+              {% load widget_tweaks %}
+              <div class="filter_item_price">
+                <div class="filter-item_title">Цена</div>
+                <ul>
+                  <li>
+                    <div class="roww">
+                      <div class="half">
+                        <div class="price el-input">
+                          {% render_field filter.form.price__gt class="el-input__inner" placeholder="от" %}
+                        </div>
+
+                      </div>
+                      <div class="half">
+                        <div class="price el-input">
+                          {% render_field filter.form.price__lt class="el-input__inner" placeholder="до" %}
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="filter_item">
+                <div class="filter-item_title">Магазины</div>
+                <ul>
+                  {% for choice in filter.form.shop %}
+                    <li>
+                      <label class="el-checkbox">
+                        <span class="el-checkbox__input">
+                          {{ choice.tag }}
+                        </span>
+                        <span class="el-checkbox__label">
+                          {{ choice.choice_label }}
+                        </span>
+                      </label>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+              <button type="submit">OK</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      function openForm_filter() {
+        document.getElementById("popup-filter").style.display = "block";
+      }
+      function closeForm_filter() {
+        document.getElementById("popup-filter").style.display = "none";
       }
     </script>
   </body>

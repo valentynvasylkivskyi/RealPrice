@@ -1,25 +1,33 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from django.http import HttpResponseRedirect, HttpResponse
+from django.http import HttpResponseRedirect
 from django.urls import reverse
-from django.db.models import Q, Prefetch
-from django.views.generic import ListView, View
+from django.db.models import Prefetch
+from django.views.generic import View
 from braces.views import LoginRequiredMixin
+from django_filters.views import FilterView
 
 from .models import Product, Price
 from .forms import SignUpForm
-from .tasks import add_product_task
+from .filters import ProductFilter
 from .scripts.scrap_template_first_add import scrap_template_first_add
 
-class ProductsListView(ListView):
+class ProductsListView(FilterView):
     model = Product
     template_name = 'myapp/base.html'
     paginate_by = 15
-    context_object_name = "products"
-    queryset = Product.objects.prefetch_related(
-        Prefetch('prices', queryset=Price.objects.order_by('date'), to_attr='prices_ASC'),
-        Prefetch('prices', queryset=Price.objects.order_by('-date'), to_attr='prices_DESC'),
-    )
+    filterset_class = ProductFilter
+    context_object_name = 'filter'
+
+    def get_queryset(self):
+        queryset = ProductFilter(
+            self.request.GET,
+            Product.objects.prefetch_related(
+                Prefetch('prices', queryset=Price.objects.order_by('date'), to_attr='prices_ASC'),
+                Prefetch('prices', queryset=Price.objects.order_by('-date'), to_attr='prices_DESC'),
+                ).order_by('id').filter(operation_result=True).distinct()
+        ).qs
+        return queryset
 
 class MyTrackingView(LoginRequiredMixin, ProductsListView):
     login_url = 'login'
@@ -30,7 +38,18 @@ class MyTrackingView(LoginRequiredMixin, ProductsListView):
     def get_queryset(self):
         queryset = super().get_queryset().filter(
             users__username__contains=self.request.user.username,
-            operation_result=True,
+        )
+        return queryset
+
+class SearchView(ProductsListView):
+
+    def get_template_names(self):
+        template_name = 'myapp/base_search_content.html'
+        return template_name
+    def get_queryset(self):
+        url_parameters = self.request.GET.get('q')
+        queryset = super().get_queryset().filter(
+            product_name__icontains=url_parameters,
         )
         return queryset
 
@@ -66,29 +85,6 @@ class SignUpView(View):
         self.form = SignUpForm()
         return self.render(request)
 
-def search(request):
-    query = request.GET.get('q')
-    products = Product.objects.filter(
-            Q(product_name__icontains=query)
-        )
-    return render(request, 'myapp/base_search_content.html', {'products': products})
-
-
-def add_tracking_link(request):
-    if request.user.is_authenticated:
-        return  render(request, 'myapp/base_add_tracking.html')
-    else:
-        return HttpResponseRedirect(reverse('login'))
-
-def add_tracking(request):
-    user = request.user
-    link = request.GET.get('q')
-    p = Product(link=link)
-    p.save()
-    p.users.add(user)
-
-    add_product_task.delay(p.id)
-    return HttpResponseRedirect(reverse('my_tracking'))
 
 
 

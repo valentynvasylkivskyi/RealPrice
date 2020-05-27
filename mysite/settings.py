@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = True
+DEBUG = os.getenv("DEBUG")
 
 ALLOWED_HOSTS = ['127.0.0.1','realprice.pythonanywhere.com']
 
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'mathfilters',
     'widget_tweaks',
+    'django_filters',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

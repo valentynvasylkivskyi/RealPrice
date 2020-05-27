@@ -28,7 +28,6 @@ div {
 }
 
 .topnav {
-  max-width: 1366px;
   margin: 0 auto;
   justify-content: space-between;
   overflow: hidden;
@@ -46,18 +45,15 @@ div {
   text-decoration: none;
   font-size: 14px;
 }
-
-.topnav a:hover {
-  background-color: #364555;
-  color: #fff;
-}
-
-.topnav a.active {
-  background-color: #364555;
-  color: #fff;
-}
 .nav-item a {
   padding: 11px 16px;
+}
+.nav-item a:first-child {
+    font-weight: 700;
+    padding: 11px 16px;
+}
+.nav-item-hide a {
+    padding: 11px 16px;
 }
 .nav_search {
   width: calc(100% - 728px);
@@ -76,7 +72,7 @@ form {
     border: none;
     width: 100%;
     padding: 8px 8px 8px 8px;
-    border-radius: 6px;
+    border-radius: 4px;
     -webkit-appearance: none;
     font-size: 13px;
 }
@@ -124,6 +120,12 @@ form {
   white-space: nowrap;
   font-size: 12px;
 }
+.home-hide {
+    display: none;
+}
+.nav-item-hide {
+    display: none;
+}
 
 @media screen and (max-width: 940px) {
   .topnav a {display: none;}
@@ -133,7 +135,7 @@ form {
   }
   .nav_search {
     float: left;
-    width: calc(100% - 64px);
+    width: calc(100% - 56px);
   }
   .nav_search_input {
     width: 100%;
@@ -154,6 +156,14 @@ form {
     position: absolute;
     left: 0;
     top: 0;
+  }
+  .nav-item-hide {
+    display: block;
+  }
+  .topnav.responsive .home-hide {
+      float: none;
+      display: block;
+      text-align: left;
   }
   .topnav.responsive a {
     float: none;
@@ -206,6 +216,7 @@ form {
 	flex-basis: 50%;
     margin: 0 8px 20px 0;
     display: inline-block;
+    overflow: hidden;
 }
 .ordering_items {
 	display: block;
@@ -214,6 +225,9 @@ form {
     padding: 7px 12px 8px 12px;
     border: 1px solid rgba(0,0,0,.11);
     border-radius: 4px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: clip;
 }
 .ordering_filter {
 	width: 100%;
@@ -488,28 +502,49 @@ th {
     padding: 20px;
     white-space: nowrap;
 }
-.add_tracking {
-	margin: 68px auto 16px auto;
-  	padding: 12px;
+.add_tracking-block {
+    margin: 68px auto 16px auto;
+  	padding: 6px;
   	width: 100%;
 }
-.add_tracking_input {
+.add_tracking {
     background: #fff;
+    width: 100%;
+    padding: 12px;
+    box-shadow:  0 1px 2px rgba(0,0,0,.25);
+}
+.add_tracking_input {
+    display: inline-block;
+
     color: rgba(0,0,0,.87);
     transition: .3s;
     border: none;
-    width: 100%;
+    width: calc(100% - 50px);
     padding: 8px 8px 8px 8px;
     border-radius: 6px;
     -webkit-appearance: none;
     font-size: 13px;
-    box-shadow:  0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 }
 .add_tracking_input:focus {
     background: #fff;
     border-radius: 4px;
     padding-left: 4px;
     padding-right: 4px;
+    outline: 0;
+    outline-offset: 0;
+}
+.add_tracking-btn {
+    border-radius: 10px;
+    border: 1px solid #f92672;
+    background-color: #f92672;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 9px 12px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
     outline: 0;
     outline-offset: 0;
 }
@@ -525,7 +560,7 @@ ul {
     margin-block-end: 1em;
     margin-inline-start: 0px;
     margin-inline-end: 0px;
-    padding-inline-start: 40px;
+
 }
 li {
     display: list-item;
@@ -595,6 +630,8 @@ li {
   .cards { grid-template-columns: repeat(2, 1fr); }
   .card-block {border-right: 1px solid rgba(0,0,0,.11);}
   .card-block:nth-child(even) {border-right: none;}
+  .main-content {padding: 6px;}
+  .main-content_block {padding: 8px;}
 }
 @media only screen and (min-width: 730px) {
   .cards { grid-template-columns: repeat(3, 1fr); }
@@ -607,7 +644,8 @@ li {
   .card-block:nth-child(3n) {border-right: 1px solid rgba(0,0,0,.11);}
   .card-block:nth-child(4n) {border-right: none;}
   .main-content { width: 90%; margin: 0 auto; margin-top: 56px;}
-  .add_tracking { width: 90%;}
+  .add_tracking-block { width: 90%;}
+  .topnav {width: 90%;}
 }
 @media only screen and (min-width: 1240px) {
   .cards { grid-template-columns: repeat(5, 1fr); }
@@ -616,7 +654,8 @@ li {
   .card-block:nth-child(4n) {border-right: 1px solid rgba(0,0,0,.11);}
   .card-block:nth-child(5n) {border-right: none;}
   .main-content { width: 80%; margin: 0 auto; margin-top: 56px;}
-  .add_tracking { width: 80%;}
+  .add_tracking-block { width: 80%;}
+  .topnav {width: 80%;}
 }
 
 #popup-1 {
@@ -642,7 +681,203 @@ li {
         0 10px 10px rgba(0,0,0,0.22);
     text-align: center;
 }
+#popup-filter {
+    display: none;
+    background-color: rgba(0,0,0,0.5);
+    position: fixed;
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    z-index: 11;
+}
+.popup-filter-content {
+    position: fixed;
+    z-index: 10000;
+    right: 0;
+    top: 0;
+    width: 320px;
+    max-width: calc(100vw - 50px);
+    height: 100vh;
+    display: block;
+    overflow-y: auto;
+    transition: .3s;
+    background: #fff;
+}
+.filter-header {
+    height: 50px;
+    padding: 0;
+    border-bottom: 1px solid hsla(0,0%,80%,.34);
+    display: block;
+    background: #fff;
+    position: fixed;
+    width: 320px;
+    z-index: 10;
+    box-shadow: 0 2px 6px rgba(0,0,0,.25);
+    right: 0;
+    max-width: calc(100vw - 50px);
+    transition: .3s;
+}
+.filter-header div {
+    display: flex;
+    align-items: center;
+}
+.filter-header .filter-header-btn {
+    height: 50px;
+    width: 80px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3b6d9a;
+    position: relative;
+    z-index: 1;
+}
+.filter-header .title {
+    width: 100%;
+    position: absolute;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.filter-body {
+    padding-top: 50px;
+    padding-bottom: 85px;
+}
+.filter-base {
+    padding: 16px;
+}
+.filter_item {
+    padding: 16px 0 14px;
+    border-top: 1px solid #e4e4e4;
+    order: 1;
+}
+.filter-item_title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    font: 400 16px Roboto,Helvetica,Arial,sans-serif;
+    margin: 0;
+    cursor: pointer;
+    font-size: 16px;
+    color: #3b6d9a;
+    transition: .3s;
+}
+.filter_item ul {
+    overflow: hidden;
+    margin: 0;
+    list-style: none;
+    transition: max-height 1s ease-in-out;
+}
+.filter_item ul li:first-child {
+    margin: 10px 0 0;
+}
+.filter_item ul li {
+    position: relative;
+    height: auto;
+    width: 100%;
+    vertical-align: middle;
+    background: #fff;
+    transition: .3s;
+    padding: 0;
+    border-radius: 3px;
+}
+.filter_item ul li label {
+    padding: 7px 5px 7px 0;
+}
+.el-checkbox {
+    cursor: pointer;
+    display: flex;
+    position: relative;
+    align-items: center;
+}
+.el-checkbox__input {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    white-space: nowrap;
+    outline: 0;
+    line-height: 0;
+    vertical-align: middle;
+    margin-right: 4px;
+}
+.filter_item ul li label .el-checkbox__inner {
+    width: 22px;
+    height: 22px;
+}
+.el-checkbox__inner {
+    display: inline-block;
+    position: relative;
+    border: 1px solid rgba(0,0,0,.11);
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 18px;
+    height: 18px;
+    background-color: #fff;
+    z-index: 1;
+    transition: .3s;
+}
+.el-checkbox__label {
+    font-size: 14px;
+    padding-left: 5px;
+}
 
+.filter_item_price {
+    padding: 16px 0 14px;
+}
+.roww {
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+.half {
+    display: flex;
+    width: 47%;
+    align-items: center;
+    box-sizing: border-box;
+    float: left;
+}
+.el-input {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    font-size: 13px;
+    outline: 0;
+    outline-offset: 0;
+}
+.el-input__inner {
+    padding: 16px 11px;
+    font-size: 16px;
+    color: #484748;
+    display: inline-block;
+    border-radius: 4px;
+    box-shadow: inset 0 2px 1px 0 rgba(0,0,0,.1);
+    height: 30px;
+    width: 90%;
+    border: 1px solid #e1e1e1;
+    outline: 0;
+    outline-offset: 0;
+}
+.filter_item_price ul {
+    overflow: hidden;
+    margin: 0;
+    list-style: none;
+    transition: max-height 1s ease-in-out;
+}
+.filter_item_price ul li:first-child {
+    margin: 10px 0 0;
+}
+.filter_item_price ul li {
+    position: relative;
+    height: auto;
+    width: 100%;
+    vertical-align: middle;
+    background: #fff;
+    transition: .3s;
+    padding: 0;
+    border-radius: 3px;
+}
 button {
     border-radius: 10px;
     border: 1px solid #f92672;

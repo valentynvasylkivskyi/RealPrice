@@ -1,5 +1,9 @@
 {% extends 'myapp/base.html' %}
 
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="/static/myapp/css/add_track.css">
+{% endblock %}
+
 {% block title %}
 <title>
     Добавить трекинг
@@ -7,13 +11,34 @@
 {% endblock%}
 
 {% block content %}
+<div class="add_tracking-block">
     <div class="add_tracking">
         <form method="post">
             {% csrf_token %}
-            <input name="q" class="add_tracking_input" type="url" placeholder="Введите ссылку на товар и нажмите Enter">
+            <input name="q" class="add_tracking_input" type="url" placeholder="Введите ссылку на товар">
+            <button type="submit" class="add_tracking-btn" onclick="openForm_add_tracking()">OK</button>
         </form>
     </div>
+</div>
 
-    {{ block.super }}
+<div id="popup-add-tracking">
+    <div class="popup-content">
+        <h3>Трекинг добавлен!</h3>
+        <br>
+        <p>Через несколько секунд, он отобразиться в Ваших трекингах</p>
+        <br>
+        <button onclick="closeForm_add_tracking()">OK</button>
+    </div>
+</div>
+
+<script>
+    function openForm_add_tracking() {
+        document.getElementById("popup-add-tracking").style.display = "block";
+    }
+    function closeForm_add_tracking() {
+        document.getElementById("popup-add-tracking").style.display = "none";
+    }
+</script>
+{{ block.super }}
 {% endblock %}
-{% block main-content-title %}Отслеживают другие пользователи{% endblock %}
+{% block main-content-title %}Часто отслеживают{% endblock %}
