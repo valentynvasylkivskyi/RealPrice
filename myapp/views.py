@@ -15,7 +15,7 @@ from .scripts.scrap_template_first_add import scrap_template_first_add
 class ProductsListView(FilterView):
     model = Product
     template_name = 'myapp/base.html'
-    paginate_by = 15
+    paginate_by = 7
     filterset_class = ProductFilter
 
     def get_queryset(self):
