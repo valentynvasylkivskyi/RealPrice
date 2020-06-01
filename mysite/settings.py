@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-from celery.schedules import crontab
+#from celery.schedules import crontab
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'myapp',
     'crispy_forms',
-    'django_celery_results',
+    #'django_celery_results',
     'django.contrib.humanize',
     'mathfilters',
     'widget_tweaks',
@@ -121,6 +121,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+"""
 CELERY_BROKER_URL = 'amqp://localhost'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = 'Europe/Kiev'
@@ -131,7 +132,7 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute='*/5')
     },
 }
-
+"""
 #debug_toolbar settings
 if DEBUG:
     INTERNAL_IPS = ('127.0.0.1',)

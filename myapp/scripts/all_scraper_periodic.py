@@ -6,7 +6,6 @@ from django.utils import timezone
 from time import sleep
 from random import randint
 
-from myapp.models import Product
 from mysite.settings import MEDIA_ROOT
 from . import scrapers
 

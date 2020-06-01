@@ -1,3 +1,4 @@
+"""
 from mysite.celery import app
 from .models import Product
 
@@ -16,4 +17,4 @@ def all_scraper_periodic_task():
     all_scraper_periodic(products)
     return "PERIODIC TASK COMPLETE"
 
-
+"""
