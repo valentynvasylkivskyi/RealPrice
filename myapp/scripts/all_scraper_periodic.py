@@ -29,10 +29,12 @@ def all_scraper_periodic(products):
             random_sleep()
             data = method_to_call(product.link)
             # add price
-            if product.prices.order_by('date').last().price != data['product_price']:
+            if product.current_price != data['product_price']:
                 product.prices.create(price=data['product_price'])
-            # update field Last update
+                product.current_price = data['product_price']
+            # update field Last update and discount
             product.last_update = timezone.now()
+            product.discount = product.get_discount()
             product.operation_result = True
             product.save()
         except:

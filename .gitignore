@@ -16,6 +16,7 @@ realprice_env/
 .idea/
 TODO.txt
 media/
+migrations/
 
 # celery beat schedule file
 celerybeat-schedule.*

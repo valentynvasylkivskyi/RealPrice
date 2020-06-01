@@ -17,16 +17,12 @@ class ProductsListView(FilterView):
     template_name = 'myapp/base.html'
     paginate_by = 15
     filterset_class = ProductFilter
-    context_object_name = 'filter'
 
     def get_queryset(self):
-        queryset = ProductFilter(
-            self.request.GET,
-            Product.objects.prefetch_related(
+        queryset = self.model.objects.filter(operation_result=True).prefetch_related(
                 Prefetch('prices', queryset=Price.objects.order_by('date'), to_attr='prices_ASC'),
                 Prefetch('prices', queryset=Price.objects.order_by('-date'), to_attr='prices_DESC'),
-                ).order_by('id').filter(operation_result=True).distinct()
-        ).qs
+                ).order_by('-created')
         return queryset
 
 class MyTrackingView(LoginRequiredMixin, ProductsListView):

@@ -23,6 +23,9 @@ class Product(models.Model):
     link = models.CharField(max_length=1024, null=False, blank=True)
     product_image = models.ImageField(upload_to='images', default=DEFAULT_IMAGE_PATH)
 
+    current_price = models.IntegerField(blank=True, default=0)
+    discount = models.IntegerField(blank=True, default=0)
+
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, null=True)
     visibility_status = models.PositiveSmallIntegerField(choices=visibility, default=DEFAULT_VISIBILITY_STATUS)
 
@@ -32,7 +35,18 @@ class Product(models.Model):
     # Status of products (disabled = False / enabled = True)
     status = models.BooleanField(default=True)
     last_update = models.DateTimeField(auto_now_add=True, null=True)
+    created = models.DateTimeField(auto_now_add=True, null=False)
 
+
+    def get_current_price(self):
+        current_price = self.prices.order_by('-date')[0].price
+        return current_price
+
+    def get_discount(self):
+        start_price = self.prices.order_by('date')[0].price
+        last_price = self.prices.order_by('-date')[0].price
+        discount = int(last_price / start_price * 100 - 100)
+        return discount
 
     def __str__(self):
         return self.product_name

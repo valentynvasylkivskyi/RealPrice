@@ -29,6 +29,7 @@ def scrap_template_first_add(product_id):
 
             # update database fields
             product.prices.create(price=data['product_price'])
+            product.current_price = data['product_price']
             product.product_name = data['product_name']
 
             # update field Last update

@@ -14,6 +14,8 @@ class ProductAdmin(admin.ModelAdmin):
         'operation_result',
         'status',
         'last_update',
+        'current_price',
+        'discount',
     )
 
 @admin.register(Shop)

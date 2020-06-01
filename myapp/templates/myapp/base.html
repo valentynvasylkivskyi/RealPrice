@@ -116,31 +116,27 @@
     <div class="main-content">
       <div class="main-content_block">
         <h1>{% block main-content-title %}Все трекинги{% endblock %}</h1>
+        {% block content-tool-bar %}
         <div class="main-content_tool-bar">
           <div class="row">
             <div class="col">
               <div class="tool-bar_ordering">
-                <div class="ordering_items" onclick="openForm()">
-                  <div style="overflow: hidden">максимальная скидка</div>
-                  <!--
-                  <select class="ordering_filter">
-                    <option value="discount_desc">максимальная скидка</option>
-
-                    <option value="new">новые</option>
-                    <option value="price_asc">по увеличению цены</option>
-                    <option value="price_desc">по уменьшению цены</option>
-                    <option value="tracking_user_count_desc">отслеживаемые</option>
-
-                  </select>
-                  -->
+                <div class="ordering_items">
+                  <form method="get">
+                    <select name="order" class="ordering_filter" form="ordering" onchange="ordering.submit()">
+                      {% for choice in filter.form.order %}
+                        {{ choice }}
+                      {% endfor %}
+                    </select>
+                  </form>
                 </div>
               </div>
               <div class="tool-bar_filter" onclick="openForm_filter()">Фильтр</div>
             </div>
           </div>
-        </div>  
+        </div>
+        {% endblock %}
         <div class="cards">
-
           {% for product in object_list %}
           <div class="card-block">
             <div class="product-card">
@@ -164,9 +160,7 @@
                   </div>
                   <div class="product-card_discount">
                     <span class="product-card_discount_program">
-                      {% with discount=product.prices_DESC.0.price|div:product.prices_ASC.0.price|mul:100|sub:100 %}
-                      {{discount|floatformat:0}}%
-                      {% endwith %}
+                      {{ product.discount }}%
                     </span>
                   </div>
                   <div class="product-card_prices">
@@ -176,7 +170,7 @@
                       </span>
                     </div>
                     <div class="prices_price">
-                      <span>{{product.prices_DESC.0.price|intcomma}}</span>
+                      <span>{{product.current_price|intcomma}}</span>
                     </div>
                     <div class="currency">
                       <span>грн.</span>
@@ -188,7 +182,7 @@
                          src="/static/myapp/icons/update.ico">
                     </span>
                     <span class="product-card_last-update-text">
-                      {{product.last_update |naturaltime}}
+                      {{product.last_update|naturaltime}}
                     </span>
                   </div>
                 </div>    
@@ -324,7 +318,7 @@
         </div>
         <div class="filter-body">
           <div class="filter-base">
-            <form method="get">
+            <form method="get"  id="ordering">
               {% load widget_tweaks %}
               <div class="filter_item_price">
                 <div class="filter-item_title">Цена</div>
