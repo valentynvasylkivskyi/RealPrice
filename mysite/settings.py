@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'mathfilters',
     'widget_tweaks',
-    'django_filters',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
