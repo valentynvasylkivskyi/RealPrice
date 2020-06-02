@@ -7,15 +7,18 @@ from django.views.generic import View
 from braces.views import LoginRequiredMixin
 from django_filters.views import FilterView
 
+import json
+
 from .models import Product, Price
 from .forms import SignUpForm
 from .filters import ProductFilter
 from .scripts.scrap_template_first_add import scrap_template_first_add
 
+
 class ProductsListView(FilterView):
     model = Product
     template_name = 'myapp/base.html'
-    paginate_by = 7
+    paginate_by = 15
     filterset_class = ProductFilter
 
     def get_queryset(self):
@@ -81,8 +84,31 @@ class SignUpView(View):
         self.form = SignUpForm()
         return self.render(request)
 
+def product_prices_chart(request, pk):
+    product = Product.objects.get(id=pk)
+    data_set = product.prices.order_by('date')
 
+    categories = list()
+    prices_data = list()
 
+    for entry in data_set:
+        categories.append(entry.date.strftime("%d/%m/%Y"))
+        prices_data.append(entry.price)
+
+    prices = {
+        'name': 'Цена',
+        'data': prices_data,
+        'color': '#f92672'
+    }
+
+    chart = {
+        'chart': {'type': 'column'},
+        'title': {'text': '{}'.format(product.product_name)},
+        'xAxis': {'categories': categories},
+        'series': [prices]
+    }
+    dump = json.dumps(chart, indent=4, sort_keys=True, default=str)
+    return render(request, 'myapp/product_prices_chart.html', {'chart': dump, 'prices': data_set})
 
 
 

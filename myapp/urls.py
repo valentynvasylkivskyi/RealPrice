@@ -14,6 +14,7 @@ urlpatterns = [
     path('signup/', views.SignUpView.as_view(), name='signup'),
     path('search', views.SearchView.as_view(), name='base_search_content'),
     path('add_tracking', views.AddTrackingView.as_view(), name='base_add_tracking'),
+    path('prices_chart/<int:pk>/', views.product_prices_chart, name='prices_chart')
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

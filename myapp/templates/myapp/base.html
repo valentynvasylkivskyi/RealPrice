@@ -9,6 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
+
     <link rel="stylesheet" type="text/css" href="/static/myapp/css/base.css">
     {% block head %}
     {% endblock %}
@@ -196,7 +197,8 @@
                     </a>
                 </div>
                 <div class="product-card_to-graphic">
-                    <a href="javascript:void(0);" onclick="openForm()">
+                    <!--<a href="javascript:void(0);" onclick="openForm()">-->
+                    <a href="{% url 'prices_chart' pk=product.pk %}">
                       <img class="product-card_action_icons" alt="{{product.product_name}}"
                          src="/static/myapp/icons/product_graphic.ico">
                     </a>

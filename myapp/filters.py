@@ -5,8 +5,8 @@ import django_filters
 CHOICES = (
     ('-created', 'новые'),
     ('discount', 'скидка по убыванию'),
-    ('-discount', 'скидка по возростанию'),
-    ('current_price', 'по возростанию цены'),
+    ('-discount', 'скидка по возрастанию'),
+    ('current_price', 'по возрастанию цены'),
     ('-current_price', 'по убыванию цены'),
 
 )

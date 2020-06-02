@@ -1,0 +1,45 @@
+{% extends 'myapp/base.html' %}
+{% load mathfilters %}
+{% load humanize %}
+
+{% block title %}
+<title>
+    График цен по товару
+</title>
+{% endblock%}
+
+{% block content %}
+<div class="main-content">
+<div id="chart_container"></div>
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+<script>
+  Highcharts.chart('chart_container', {{ chart|safe }});
+</script>
+
+<div class="product-prices">
+    <table>
+        <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Цена</th>
+            <th>Скидка</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for price in prices %}
+        <tr>
+            <td>{{ price.date }}</td>
+            <td>{{ price.price|intcomma }} грн.</td>
+            <td>
+                {% with discount_table=price|div:prices.0.price|mul:100|sub:100 %}
+                {{discount_table|floatformat:0}}%
+                {% endwith %}
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+{% endblock %}
+{% block main-content-title %}Часто отслеживают{% endblock %}
