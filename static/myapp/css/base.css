@@ -629,6 +629,44 @@ li {
 	background-color: #fff!important;
     width: 100%;
 }
+
+.about-navigation {
+  margin-bottom: 16px;
+}
+
+.about-navigation ul {
+  margin: 0 0 45px;
+  padding: 0;
+  list-style: none;
+  font-size: 0;
+
+}
+.about-navigation li {
+  display: inline;
+
+}
+.about-navigation-link {
+    font-size: 14px;
+    color: #3e3d32;
+    text-decoration: none;
+    display: block;
+    width: auto!important;
+    padding: 8px 0;
+    border-bottom: 1px solid transparent;
+    text-align: center;
+    text-transform: uppercase;
+    color: #000;
+    cursor: pointer;
+}
+
+.about-navigation-link:active {
+  border-top: 1px solid #c9a16e;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.about-navigation-link:hover {
+  color: #c9a16e;
+}
 @media only screen and (min-width: 150px) {
   .cards { grid-template-columns: repeat(1, 1fr); }
   .card-block {border-right: none;}

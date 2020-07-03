@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700' rel='stylesheet' type='text/css'>
-
+    <link rel="icon" type="image/png" href="/static/myapp/icons/favicon.png" />
     <link rel="stylesheet" type="text/css" href="/static/myapp/css/base.css">
     {% block head %}
     {% endblock %}
@@ -37,47 +37,47 @@
         <div class="nav-item">
           <a href="{% url 'my_tracking' %}">
             <div style="display: inline-block;">
-              <img class="nav-item-image" 
+              <img class="nav-item-image"
                   src="/static/myapp/icons/my_tracking.png">
-            </div>  
-            <div class="nav-item-text">    
+            </div>
+            <div class="nav-item-text">
               <span class="nav-item-text_first-line">Мои</span>
               <br>
               <span class="nav-item-text_second-line">трекинги</span>
-            </div>           
-          </a>
-        </div>  
-        <div class="nav-item">
-          <a href="{% url 'base_add_tracking' %}">
-            <div style="display: inline-block;">
-              <img class="nav-item-image" 
-                  src="/static/myapp/icons/add_track.png">
-            </div>  
-            <div class="nav-item-text">    
-              <span class="nav-item-text_first-line">Добавить</span>
-              <br>
-              <span class="nav-item-text_second-line">новый трекинг</span>
-            </div>           
+            </div>
           </a>
         </div>
         <div class="nav-item">
-          <a href="javascript:void(0);" onclick="openForm()">
+          <a href="{% url 'base_add_tracking' %}">
             <div style="display: inline-block;">
-              <img class="nav-item-image" 
+              <img class="nav-item-image"
+                  src="/static/myapp/icons/add_track.png">
+            </div>
+            <div class="nav-item-text">
+              <span class="nav-item-text_first-line">Добавить</span>
+              <br>
+              <span class="nav-item-text_second-line">новый трекинг</span>
+            </div>
+          </a>
+        </div>
+        <div class="nav-item">
+          <a href="{%url 'about' %}">
+            <div style="display: inline-block;">
+              <img class="nav-item-image"
                   src="/static/myapp/icons/inform.png">
-            </div>  
-            <div class="nav-item-text">    
+            </div>
+            <div class="nav-item-text">
               <span class="nav-item-text_first-line">Новости и</span>
               <br>
               <span class="nav-item-text_second-line">информация</span>
-            </div>           
+            </div>
           </a>
         </div>
         <div class="nav_search">
           <form action="{%url 'base_search_content' %}" method="get">
             <input name="q" class="nav_search_input" type="search" placeholder="Поиск">
           </form>
-        </div>  
+        </div>
         <div class="nav_sign">
           {% if user.is_authenticated %}
           <a href="{% url 'logout' %}">
@@ -94,23 +94,23 @@
           {% else %}
           <a href="{% url 'login' %}">
             <div style="display: inline-block;">
-              <img class="nav-item-image" 
+              <img class="nav-item-image"
                   src="/static/myapp/icons/user.png">
-            </div>  
-            <div class="nav-item-text">    
+            </div>
+            <div class="nav-item-text">
               <span class="nav-item-text_first-line">Приветствую,</span>
               <br>
               <span class="nav-item-text_second-line">войдите в аккаунт</span>
-            </div>  
+            </div>
           </a>
           {% endif %}
         </div>
         <div class="nav-item">
           <a href="javascript:void(0);" class="icon" onclick="myFunction()">
-            <img class="nav-item-image" 
+            <img class="nav-item-image"
               src="/static/myapp/icons/navbar_toogler.png">
           </a>
-        </div>    
+        </div>
       </div>
     </div>
     {% block content %}
@@ -148,14 +148,14 @@
               </div>
               <div class="product-card_body">
                 <div class="product-card_preview">
-                    <a href="#" title="test">
+                    <a href="{% url 'prices_chart' pk=product.pk %}" title="{{ product.product_name }}">
                       <img class="product-card_image" alt="Купить {{ product.product_name }}" title="{{ product.product_name }}"
                          src="{{ product.product_image.url }}">
                     </a>
                 </div>
                 <div class="product-card_detail">
                   <div class="product-card_name">
-                    <a href="#" class target="_self" title="{{ product.product_name }}">
+                    <a href="{% url 'prices_chart' pk=product.pk %}" class target="_self" title="{{ product.product_name }}">
                       <span>{{product.product_name}}</span>
                     </a>
                   </div>
@@ -197,7 +197,6 @@
                     </a>
                 </div>
                 <div class="product-card_to-graphic">
-                    <!--<a href="javascript:void(0);" onclick="openForm()">-->
                     <a href="{% url 'prices_chart' pk=product.pk %}">
                       <img class="product-card_action_icons" alt="{{product.product_name}}"
                          src="/static/myapp/icons/product_graphic.ico">
@@ -267,11 +266,7 @@
               <tr>
                 <td>{{ product.product_name }}</td>
                 <td>{{ product.prices_DESC.0.price|intcomma }} грн.</td>
-                <td>
-                  {% with discount_table=product.prices_DESC.0.price|div:product.prices_ASC.0.price|mul:100|sub:100 %}
-                  {{discount_table|floatformat:0}}%
-                  {% endwith %}
-                </td>
+                <td>{{ product.discount }}%</td>
               </tr>
               {% endfor %}
             </tbody>

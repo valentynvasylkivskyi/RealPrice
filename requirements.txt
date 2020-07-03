@@ -17,3 +17,4 @@ django-widget-tweaks==1.4.8
 python-dotenv==0.13.0
 mysqlclient
 django-filter==2.2.0
+social-auth-app-django==3.4.0

@@ -9,6 +9,9 @@ from random import randint
 from mysite.settings import MEDIA_ROOT
 from . import scrapers
 
+from django.core.mail import send_mail
+from django.conf import settings
+
 import tldextract
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mysite.settings")
@@ -31,6 +34,24 @@ def all_scraper_periodic(products):
             if product.current_price != data['product_price']:
                 product.prices.create(price=data['product_price'])
                 product.current_price = data['product_price']
+
+                # send email if change price
+                subject = '{}% {}'.format(product.get_discount(), product.product_name)
+                message = 'Изменилась стоимость товара - {} \n' \
+                          'Текущая скидка на товар составляет {}%\n' \
+                          'Просмотреть график роста\падения цены - {} \n' \
+                          'Купить товар - {}'.format(
+                    product.product_name,
+                    product.get_discount(),
+                    'http://realprice.com.ua/prices_chart/{}'.format(product.id),
+                    product.link,
+                )
+                email_from = settings.EMAIL_HOST_USER
+                recipient_list = []
+                for user in product.users.all():
+                    recipient_list.append(user.email)
+                    send_mail(subject, message, email_from, recipient_list)
+
             # update field Last update and discount
             product.last_update = timezone.now()
             product.discount = product.get_discount()
@@ -39,6 +60,7 @@ def all_scraper_periodic(products):
         except:
             product.operation_result = False
             product.save()
+
             continue
 
 

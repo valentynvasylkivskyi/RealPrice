@@ -40,6 +40,12 @@ class MyTrackingView(LoginRequiredMixin, ProductsListView):
         )
         return queryset
 
+class AboutView(ProductsListView):
+
+    def get_template_names(self):
+        template_name = 'myapp/about.html'
+        return template_name
+
 class SearchView(ProductsListView):
 
     def get_template_names(self):
