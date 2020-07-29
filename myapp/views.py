@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Prefetch
-from django.views.generic import View
+from django.views.generic import View, TemplateView
 from braces.views import LoginRequiredMixin
 from django_filters.views import FilterView
 
@@ -40,11 +40,17 @@ class MyTrackingView(LoginRequiredMixin, ProductsListView):
         )
         return queryset
 
-class AboutView(ProductsListView):
+class AboutView(TemplateView):
+    template_name = 'myapp/about.html'
 
-    def get_template_names(self):
-        template_name = 'myapp/about.html'
-        return template_name
+class AboutAsView(TemplateView):
+    template_name = 'myapp/about_as.html'
+
+class PolicyView(TemplateView):
+    template_name = 'myapp/policy.html'
+
+class HelpView(TemplateView):
+    template_name = 'myapp/help.html'
 
 class SearchView(ProductsListView):
 

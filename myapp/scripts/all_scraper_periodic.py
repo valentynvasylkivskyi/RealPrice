@@ -38,7 +38,7 @@ def all_scraper_periodic(products):
                 # send email if change price
                 subject = '{}% {}'.format(product.get_discount(), product.product_name)
                 message = 'Изменилась стоимость товара - {} \n' \
-                          'Текущая скидка на товар составляет {}%\n' \
+                          'Процент роста\падения составляет: {}%\n' \
                           'Просмотреть график роста\падения цены - {} \n' \
                           'Купить товар - {}'.format(
                     product.product_name,

@@ -1,0 +1,51 @@
+{% extends 'myapp/about.html' %}
+
+{% block title %}
+<title>Помощь - Лучшие скидки и акции на товары интернет-магазинов</title>
+{% endblock%}
+
+{% block main-content-title %}Помощь{% endblock %}
+
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="/static/myapp/css/help.css">
+{% endblock %}
+
+{% block about-content %}
+<div class="about-as-content">
+    <div class="help-items">
+        <h3 class="collapsible">Не приходят письма с изменением цены на добавленный товар</h3>
+        <div class="content">
+            <p>
+                1. При регистрации указан неправильный адрес электронной почты.
+                <br>2. Письма попадают в спам или блокируются Вашим почтовым клиентом.
+            </p>
+        </div>
+    </div>
+    <div class="help-items">
+        <h3 class="collapsible">Добавленный трекинг не появляется в списке моих трекингов</h3>
+        <div class="content">
+            <p>
+                1. Вы не корректно скопировали ссылку на товар в интернет магазине.
+                <br>2. Производиться добавление ссылки на товар из интернет-магазина, с которым еще нет интеграции.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+</script>
+{% endblock %}

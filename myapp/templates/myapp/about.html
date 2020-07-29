@@ -1,9 +1,11 @@
 {% extends 'myapp/base.html' %}
 
 {% block title %}
-<title>О сайте</title>
+<title>О сайте - Лучшие скидки и акции на товары интернет-магазинов</title>
 {% endblock%}
 
+{% block head %}
+{% endblock %}
 
 {% block content %}
     <div class="main-content">
@@ -15,7 +17,7 @@
                         <a href="#" class="about-navigation-link">Новости</a>
                     </li>
                     <li>
-                        <a href="#" class="about-navigation-link">О нас</a>
+                        <a href="{% url 'about_as' %}" class="about-navigation-link">О сайте</a>
                     </li>
                     <li>
                         <a href="#" class="about-navigation-link">Форма обратной связи</a>
@@ -24,13 +26,17 @@
                         <a href="#" class="about-navigation-link">Правила</a>
                     </li>
                     <li>
-                        <a href="#" class="about-navigation-link">Политика конфиденциальности</a>
+                        <a href="{% url 'policy' %}" class="about-navigation-link">Политика конфиденциальности</a>
                     </li>
                     <li>
-                        <a href="#" class="about-navigation-link">Помощь</a>
+                        <a href="{% url 'help' %}" class="about-navigation-link">Помощь</a>
                     </li>
                 </ul>
             </div>
+            {% block about-content %}
+            {% endblock %}
+
+
         </div>
     </div>
 {% endblock %}

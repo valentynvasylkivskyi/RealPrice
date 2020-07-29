@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700');
 * {
     box-sizing: border-box;
     font-family: Roboto,Helvetica,Arial,sans-serif;
@@ -56,7 +57,7 @@ div {
     padding: 11px 16px;
 }
 .nav_search {
-  width: calc(100% - 728px);
+  width: calc(100% - 768px);
   padding: 8px 0px 8px 8px;
   display: inline-block;
 }
@@ -432,6 +433,22 @@ form {
     text-align: left;
     color: #757575;
 }
+.about-as-content {
+    margin: 16px 0 10px;
+}
+.about-as-content p {
+   	font-size: 12px;
+    line-height: 1.5;
+    margin-bottom: 11px;
+    letter-spacing: .25px;
+    text-align: left;
+    color: #757575;
+}
+.about-as-content h2 {
+    font: 400 24px/28px Roboto,sans-serif;
+	margin-bottom: 14px;
+	color: rgba(0,0,0,.87);
+}
 h2 {
 	font: 400 24px/28px Roboto,sans-serif;
 	margin-bottom: 16px;
@@ -655,7 +672,6 @@ li {
     border-bottom: 1px solid transparent;
     text-align: center;
     text-transform: uppercase;
-    color: #000;
     cursor: pointer;
 }
 
