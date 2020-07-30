@@ -22,6 +22,8 @@ def scrap_template_first_add(product_id):
     product = Product.objects.get(id=product_id)
     try:
         scraper = tldextract.extract(product.link).domain
+        if scraper == 'agro-market':
+            scraper = "agro_market"
         if Shop.objects.get(shop_name=scraper):
             product.shop = Shop.objects.get(shop_name=scraper)
             method_to_call = getattr(scrapers, scraper)

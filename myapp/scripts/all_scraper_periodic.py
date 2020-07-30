@@ -27,6 +27,8 @@ def all_scraper_periodic(products):
     for product in products:
         try:
             scraper = tldextract.extract(product.link).domain
+            if scraper == 'agro-market':
+                scraper = "agro_market"
             method_to_call = getattr(scrapers, scraper)
             random_sleep()
             data = method_to_call(product.link)
