@@ -212,7 +212,26 @@ def agro_market(link):
 
     return data
 
+def eldorado(link):
+    data_source = requests.get(link, headers={'User-Agent': generate_user_agent()})
+    soup = BeautifulSoup(data_source.text, "html.parser")
+    data = {}
+    data['product_name'] = soup.find("div", itemprop="name")\
+        .find("h1").text.lstrip().rstrip()
 
+    price = soup.find("div", itemprop="price").get("content")
+    product_price = ''
+    for i in price.encode("utf-8").decode('windows-1251'):
+        if str(i).isnumeric():
+            product_price += i
+        elif str(i) == ',' or '.':
+            break
+    data['product_price'] = int(product_price)
+
+    data['product_image_link'] = soup.find("div", rel="wrap")\
+        .find("img").get("src")
+
+    return data
 
 
 
