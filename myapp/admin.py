@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Shop, Price
+from .models import Product, Shop, Price, News
 
 
 #admin.site.register(Product)
@@ -30,5 +30,12 @@ class PriceAdmin(admin.ModelAdmin):
     list_display = (
         'product',
         'price',
+        'date',
+    )
+
+@admin.register(News)
+class NewsAdmin(admin.ModelAdmin):
+    list_display = (
+        'title',
         'date',
     )

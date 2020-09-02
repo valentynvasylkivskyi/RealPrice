@@ -1,0 +1,53 @@
+{% extends 'myapp/about.html' %}
+{% load humanize %}
+
+{% block title %}
+<title>Новости - Лучшие скидки и акции на товары интернет-магазинов</title>
+{% endblock%}
+
+{% block main-content-title %}Новости{% endblock %}
+
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="/static/myapp/css/news.css">
+{% endblock %}
+
+{% block about-content %}
+<div class="cards">
+    {% for news in object_list %}
+    <div class="card-block">
+        <div class="news-card">
+            <div class="news-card_header">
+                <div class="news-card_code">
+                  <span>Код: 00{{ news.id }}</span>
+                </div>
+            </div>
+            <div class="news-card_body">
+                <div class="news-card_preview">
+                    <a href="#" title="{{ news.title }}">
+                        <img class="news-card_image" alt="{{ news.title }}" title="{{ news.title }}"
+                         src="{{ news.image.url }}">
+                    </a>
+                </div>
+                <div class="news-card_detail">
+                    <div class="news-card_name">
+                        <a href="#" class target="_self" title="{{ news.title }}">
+                            <span>{{news.title}}</span>
+                        </a>
+                    </div>
+                    <div class="news-card_update">
+                        <span>
+                            <img class="news-card_last_update_icon"
+                                src="/static/myapp/icons/update.ico">
+                        </span>
+                        <span class="news-card_last-update-text">
+                            {{news.date|naturaltime}}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

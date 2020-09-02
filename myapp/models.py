@@ -62,6 +62,18 @@ class Price(models.Model):
     def __int__(self):
         return self.price
 
+class News(models.Model):
+    title = models.CharField(max_length=1024)
+    date = models.DateTimeField(auto_now_add=True, null=True)
+    image = models.ImageField(upload_to='images', default=DEFAULT_IMAGE_PATH)
+    text = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.title
+
+
+
+
 
 
 

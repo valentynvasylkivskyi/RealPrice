@@ -3,13 +3,13 @@ from django.contrib.auth import login, authenticate
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.db.models import Prefetch
-from django.views.generic import View, TemplateView
+from django.views.generic import View, TemplateView, ListView
 from braces.views import LoginRequiredMixin
 from django_filters.views import FilterView
 
 import json
 
-from .models import Product, Price
+from .models import Product, Price, News
 from .forms import SignUpForm
 from .filters import ProductFilter
 from .scripts.scrap_template_first_add import scrap_template_first_add
@@ -27,6 +27,7 @@ class ProductsListView(FilterView):
                 Prefetch('prices', queryset=Price.objects.order_by('-date'), to_attr='prices_DESC'),
                 ).order_by('-created')
         return queryset
+
 
 class MyTrackingView(LoginRequiredMixin, ProductsListView):
     login_url = 'login'
@@ -51,6 +52,17 @@ class PolicyView(TemplateView):
 
 class HelpView(TemplateView):
     template_name = 'myapp/help.html'
+
+class NewsView(ListView):
+    model = News
+    template_name = 'myapp/news.html'
+
+    def get_queryset(self):
+        queryset = self.model.objects.order_by('-date')
+        return queryset
+
+class RulesView(TemplateView):
+    template_name = 'myapp/rules.html'
 
 class SearchView(ProductsListView):
 
