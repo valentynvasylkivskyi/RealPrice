@@ -9,7 +9,7 @@ celery==4.4.2
 django-celery-results==1.2.1
 psycopg2==2.8.5
 tldextract==2.2.2
-django-debug-toolbar==2.2
+django-debug-toolbar==2.2.1
 humanize==0.5.1
 django-braces==1.14.0
 django-mathfilters==1.0.0
