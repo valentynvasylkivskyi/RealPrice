@@ -5,7 +5,7 @@ bs4==0.0.1
 user_agent==0.1.9
 requests==2.23.0
 wget==3.2
-celery==4.4.2
+celery==5.2.2
 django-celery-results==1.2.1
 psycopg2==2.8.5
 tldextract==2.2.2
